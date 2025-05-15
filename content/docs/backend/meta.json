@@ -1,0 +1,18 @@
+{
+  "title": "Backend",
+  "description": "The Media Server",
+  "icon": "Building",
+  "pages": [
+    "---Introduction---",
+    "index",
+    "concept",
+    "architecture",
+    "sfu",
+    "egress",
+    "---Usage---",
+    "getting_started",
+    "---Explain---",
+    "bandwidth_saving"
+  ],
+  "root": true
+}

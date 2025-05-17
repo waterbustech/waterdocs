@@ -1,15 +1,15 @@
-import { source } from '@/lib/source';
+import { source } from "@/lib/source";
 import {
   DocsPage,
   DocsBody,
   DocsDescription,
   DocsTitle,
-} from 'fumadocs-ui/page';
-import { notFound } from 'next/navigation';
-import { createRelativeLink } from 'fumadocs-ui/mdx';
-import { getMDXComponents } from '@/mdx-components';
-import { RateWrapper } from '@/components/rate_wrapper';
-import { EditOnGitHub, LLMCopyButton } from './page.client';
+} from "fumadocs-ui/page";
+import { notFound } from "next/navigation";
+import { createRelativeLink } from "fumadocs-ui/mdx";
+import { getMDXComponents } from "@/mdx-components";
+import { RateWrapper } from "@/components/rate_wrapper";
+import { EditOnGitHub, LLMCopyButton } from "./page.client";
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -19,18 +19,24 @@ export default async function Page(props: {
   if (!page) notFound();
   const MDXContent = page.data.body;
   const optionDivStyle = {
-    display: 'inline-flex'
+    display: "inline-flex",
   };
   return (
-    <DocsPage  tableOfContent={{
-    style: 'clerk',
-  }}toc={page.data.toc} full={page.data.full}>
+    <DocsPage
+      tableOfContent={{
+        style: "clerk",
+      }}
+      toc={page.data.toc}
+      full={page.data.full}
+    >
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>
-        <div style={optionDivStyle}>     
-        <LLMCopyButton slug={params.slug} />
-        <EditOnGitHub url={`https://github.com/lambiengcode/waterdocs/tree/main/content/docs/${page.file.path}`}></EditOnGitHub>
+        <div style={optionDivStyle}>
+          <LLMCopyButton slug={params.slug} />
+          <EditOnGitHub
+            url={`https://github.com/lambiengcode/waterdocs/tree/main/content/docs/${page.file.path}`}
+          ></EditOnGitHub>
         </div>
         <MDXContent
           components={getMDXComponents({

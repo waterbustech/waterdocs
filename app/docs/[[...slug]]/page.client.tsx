@@ -44,7 +44,8 @@ const myStyle = {
     textDecoration: 'unset',
     border: '1px solid darkgrey',
     borderRadius: '12px',
-    marginBottom: 'calc(var(--spacing) * 4)'
+    marginBottom: 'calc(var(--spacing) * 4)',
+    marginRight: '0.5rem'
   };
 
 export function EditOnGitHub({ url }: { url: string }) {

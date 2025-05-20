@@ -1,8 +1,8 @@
-import { DocsLayout, type DocsLayoutProps } from 'fumadocs-ui/layouts/notebook';
-import { cloneElement, ReactElement, type ReactNode } from 'react';
-import { baseOptions } from '@/app/layout.config';
-import { source } from '@/lib/source';
-import { GithubInfo } from 'fumadocs-ui/components/github-info';
+import { DocsLayout, type DocsLayoutProps } from "fumadocs-ui/layouts/notebook";
+import { cloneElement, ReactElement, type ReactNode } from "react";
+import { baseOptions } from "@/app/layout.config";
+import { source } from "@/lib/source";
+import { GithubInfo } from "fumadocs-ui/components/github-info";
 
 interface MyIconProps {
   icon: ReactElement;
@@ -19,7 +19,7 @@ function MyIcon({ icon }: MyIconProps) {
   return (
     <div
       className="rounded-md p-1 shadow-lg inline-flex items-center justify-center"
-      style={{ border: `1px solid ${iconProps.color ?? '#ccc'}` }}
+      style={{ border: `1px solid ${iconProps.color ?? "#ccc"}` }}
     >
       {styledIcon}
     </div>
@@ -39,7 +39,7 @@ const docsOptions: DocsLayoutProps = {
   },
   links: [
     {
-      type: 'custom',
+      type: "custom",
       children: (
         <GithubInfo owner="waterbustech" repo="waterbus" className="lg:-mx-2" />
       ),

@@ -1,0 +1,183 @@
+---
+title: iOS
+---
+
+<Callout>In this document, I use `VisionKit` to separate background, but *VNGeneratePersonInstanceMaskRequest* only support iOS 17+</Callout>
+
+## Common WebRTC terms you should know
+
+1. VideoFrame: It contains the buffer of the frame captured by the camera device in I420 format.
+2. VideoSink:  It is used to send the frame back to [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) native source.
+3. VideoSource: It reads the camera device, produces VideoFrames, and delivers them to VideoSinks.
+4. VideoProcessor: It is an interface provided by [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) to update videoFrames produced by videoSource .
+5. MediaStream: It is an API related to [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) which provides support for streaming audio and video data. It consists of zero or more [MediaStreamTrack](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack) objects, representing various audio or video tracks
+
+## Apply in the code
+
+### Idea of virtual background in WebRTC
+
+<img src="../../img/vb-exp.gif"/>
+
+### Create a class to get VideoFrame to separate background
+
+```swift
+import Foundation
+import WebRTC
+
+@objc public class RTCVideoPipe: NSObject, RTCVideoCapturerDelegate {
+    var virtualBackground: RTCVirtualBackground?
+    var videoSource: RTCVideoSource?
+    var latestTimestampNs: Int64 = 0
+    var frameCount: Int = 0
+    var lastProcessedTimestamp: Int64 = 0
+    var fpsInterval: Int64 = 1000000000 / 15 // 15 fps to ensure VNGen can proccess
+    var backgroundImage: UIImage?
+
+    @objc public init(videoSource: RTCVideoSource) {
+        self.videoSource = videoSource
+        self.virtualBackground = RTCVirtualBackground()
+        super.init()
+    }
+    
+    @objc public func setBackgroundImage(image: UIImage?) {
+        backgroundImage = image
+    }
+
+    @objc public func capturer(_ capturer: RTCVideoCapturer, didCapture frame: RTCVideoFrame) {
+        let currentTimestamp = frame.timeStampNs
+
+        // Calculate the time since the last processed frame
+        let elapsedTimeSinceLastProcessedFrame = currentTimestamp - lastProcessedTimestamp
+
+        if elapsedTimeSinceLastProcessedFrame < fpsInterval {
+            // Skip processing the frame if it's too soon
+            return
+        }
+        
+        if backgroundImage == nil {
+            self.videoSource?.emitFrame(frame)
+            return
+        }
+
+        virtualBackground?.processForegroundMask(from: frame, backgroundImage: backgroundImage!) { processedFrame, error in
+            if let error = error {
+                // Handle error
+                print("Error processing foreground mask: \(error.localizedDescription)")
+            } else if let processedFrame = processedFrame {
+                self.lastProcessedTimestamp = currentTimestamp
+
+                if processedFrame.timeStampNs <= self.latestTimestampNs {
+                    // Skip emitting frame if its timestamp is not newer than the latest one
+                    return
+                }
+
+                self.latestTimestampNs = processedFrame.timeStampNs
+                self.videoSource?.emitFrame(processedFrame)
+            }
+        }
+    }
+}
+```
+
+### Set delegate VideoSouce to getting the VideoFrame from WebRTC
+
+```objective-c
+videoPipe = [[RTCVideoPipe alloc] initWithVideoSource: videoSource];
+        
+[videoSource setDelegate:videoPipe];
+```
+
+### Create a class implement VisionKit to separate background
+
+```swift
+import Foundation
+import AVFoundation
+import Vision
+import VisionKit
+import OpenGLES
+
+@available(iOS 17.0, *)
+var maskRequest: VNGeneratePersonInstanceMaskRequest?
+
+@objc public class RTCVirtualBackground: NSObject {
+    
+    public typealias ForegroundMaskCompletion = (RTCVideoFrame?, Error?) -> Void
+    
+    public override init() {
+        if #available(iOS 17.0, *) {
+            DispatchQueue.main.async {
+                maskRequest = VNGeneratePersonInstanceMaskRequest()
+            }
+        }
+    }
+    
+    public func processForegroundMask(from videoFrame: RTCVideoFrame, backgroundImage: UIImage, completion: @escaping ForegroundMaskCompletion) {
+        guard let pixelBuffer = convertRTCVideoFrameToPixelBuffer(videoFrame) else {
+            print("Failed to convert RTCVideoFrame to CVPixelBuffer")
+            return
+        }
+        DispatchQueue.main.async(execute: {
+            if #available(iOS 17.0, *) {
+                let inputFrameImage = CIImage(cvPixelBuffer: pixelBuffer).resize()
+                
+                let handler = VNImageRequestHandler(ciImage: inputFrameImage!, options: [:])
+                do {
+                    try handler.perform([maskRequest!])
+                    if let observation = maskRequest!.results?.first {
+                        let allInstances = observation.allInstances
+                        do {
+                            let maskedImage = try observation.generateMaskedImage(ofInstances: allInstances, from: handler, croppedToInstancesExtent: false)
+                            
+                            self.applyForegroundMask(to: maskedImage, backgroundImage: backgroundImage) { maskedPixelBuffer, error in
+                                if let maskedPixelBuffer = maskedPixelBuffer {
+                                    let frameProcessed = self.convertPixelBufferToRTCVideoFrame(maskedPixelBuffer, rotation: videoFrame.rotation, timeStampNs: videoFrame.timeStampNs)
+                                    completion(frameProcessed, nil)
+                                } else {
+                                    completion(nil, error)
+                                }
+                            }
+                        } catch {
+                            print("Error: \(error.localizedDescription)")
+                            completion(nil, error)
+                        }
+                    }
+                } catch {
+                    print("Failed to perform Vision request: \(error)")
+                    completion(nil, error)
+                }
+            }
+        })   
+    }
+}
+```
+
+### Draw segmented and background on canvas
+
+```swift
+func applyForegroundMask(to pixelBuffer: CVPixelBuffer, backgroundImage: UIImage, completion: @escaping (CVPixelBuffer?, Error?) -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let maskedUIImage = UIImage(ciImage: CIImage(cvPixelBuffer: pixelBuffer))
+            
+            let size = CGSize(width: CGFloat(CVPixelBufferGetWidth(pixelBuffer)), height: CGFloat(CVPixelBufferGetHeight(pixelBuffer)))
+            
+            let rotatedBackgroundImage = backgroundImage.rotateImage(orientation: UIImage.Orientation.up)
+            
+            UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+            rotatedBackgroundImage.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+            maskedUIImage.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+            let composedImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            DispatchQueue.main.async {
+                if let composedImage = composedImage {
+                    guard let composedPixelBuffer = self.pixelBufferFromImage(image: composedImage) else {
+                        completion(nil, nil)
+                        return
+                    }
+                    
+                    completion(composedPixelBuffer, nil)
+                }
+            }
+        }
+    }
+```

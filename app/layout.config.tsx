@@ -8,6 +8,8 @@ import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
  * Docs Layout: app/docs/layout.tsx
  */
 export const baseOptions: BaseLayoutProps = {
+  githubUrl: "https://github.com/waterbustech/waterbus",
+  themeSwitch: {enabled: false},
   nav: {
     title: (
       <>
@@ -16,7 +18,6 @@ export const baseOptions: BaseLayoutProps = {
           alt="Logo"
           width={24}
           height={24}
-          style={{ borderRadius: 8 }} 
         />
         Waterdocs
       </>

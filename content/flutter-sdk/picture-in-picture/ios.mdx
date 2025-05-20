@@ -1,0 +1,445 @@
+---
+title: iOS
+---
+
+## Approach
+
+- Based on Apple Docs, we will implement `AVPictureInPictureController` in `ViewController`. So we must create a new `ViewController` and replace `FlutterViewController`
+- Configure parameters for `AVPictureInPictureController`
+- Create a view that displays Video if the camera is turned on, and an view when the camera is turned off
+- Get `VideoFrame` from `WebRTC` to display on the view we designed in the step above
+- Implement `MethodChannel` to execute from `Flutter`
+
+## Apply in the code
+
+### Replace `FlutterViewController` by new `ViewController`
+
+- Create a new `ViewController`
+
+```swift
+class WaterbusViewController: FlutterViewController {
+    
+    // MARK: Singleton
+    static let shared = WaterbusViewController()
+    
+    // MARK: Public static variables
+    static var pipController: AVPictureInPictureController?
+    static var pipContentSource: Any?
+    static var pipVideoCallViewController: Any?
+    
+    // MARK: Private variables
+    private var pictureInPictureView: PictureInPictureView = PictureInPictureView()
+    
+    open override func viewDidLoad() {
+        // get the flutter engine for the view
+        let flutterEngine: FlutterEngine! = (UIApplication.shared.delegate as! AppDelegate).flutterEngine
+        
+        // add flutter view
+        addFlutterView(with: flutterEngine)
+        
+        // configuration pip view controller
+        preparePictureInPicture()
+    }
+    
+    func preparePictureInPicture() {
+        if #available(iOS 15.0, *) {
+            WaterbusViewController.pipVideoCallViewController = AVPictureInPictureVideoCallViewController()
+            (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).preferredContentSize = CGSize(width: Sizer.WIDTH_OF_PIP, height: Sizer.HEIGHT_OF_PIP)
+            (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).view.clipsToBounds = true
+            
+            WaterbusViewController.pipContentSource = AVPictureInPictureController.ContentSource(
+                activeVideoCallSourceView: self.view,
+                contentViewController: (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController)
+            )
+        }
+    }
+    
+    func configurationPictureInPicture(result: @escaping  FlutterResult, peerConnectionId: String, remoteStreamId: String, isRemoteCameraEnable: Bool, myAvatar: String, remoteAvatar: String, remoteName: String) {
+        if #available(iOS 15.0, *) {
+            if (WaterbusViewController.pipContentSource != nil) {
+                WaterbusViewController.pipController = AVPictureInPictureController(contentSource: WaterbusViewController.pipContentSource as! AVPictureInPictureController.ContentSource)
+                WaterbusViewController.pipController?.canStartPictureInPictureAutomaticallyFromInline = true
+                WaterbusViewController.pipController?.delegate = self
+                
+                // Add view
+                let frameOfPiP = (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).view.frame
+                pictureInPictureView = PictureInPictureView(frame: frameOfPiP)
+                pictureInPictureView.contentMode = .scaleAspectFit
+                pictureInPictureView.initParameters(peerConnectionId: peerConnectionId, remoteStreamId: remoteStreamId, isRemoteCameraEnable: isRemoteCameraEnable, myAvatar: myAvatar, remoteAvatar: remoteAvatar, remoteName: remoteName)
+                (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).view.addSubview(pictureInPictureView)
+                
+                addConstraintLayout()
+            }
+        }
+        
+        result(true)
+    }
+    
+    func addConstraintLayout() {
+        if #available(iOS 15.0, *) {
+            pictureInPictureView.translatesAutoresizingMaskIntoConstraints = false
+            let constraints = [
+                pictureInPictureView.leadingAnchor.constraint(equalTo: (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).view.leadingAnchor),
+                pictureInPictureView.trailingAnchor.constraint(equalTo: (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).view.trailingAnchor),
+                pictureInPictureView.topAnchor.constraint(equalTo: (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).view.topAnchor),
+                pictureInPictureView.bottomAnchor.constraint(equalTo: (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).view.bottomAnchor)
+            ]
+            (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).view.addConstraints(constraints)
+            pictureInPictureView.bounds = (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).view.frame
+        }
+    }
+    
+    func updatePictureInPictureView(_ result: @escaping FlutterResult, peerConnectionId: String, remoteStreamId: String, isRemoteCameraEnable: Bool, remoteAvatar: String, remoteName: String) {
+        pictureInPictureView.setRemoteInfo(peerConnectionId: peerConnectionId, remoteStreamId: remoteStreamId, isRemoteCameraEnable: isRemoteCameraEnable, remoteAvatar: remoteAvatar, remoteName: remoteName)
+        result(true)
+    }
+    
+    func updateStateUserView(_ result: @escaping FlutterResult, isRemoteCameraEnable: Bool) {
+        pictureInPictureView.updateStateValue(isRemoteCameraEnable: isRemoteCameraEnable)
+        result(true)
+    }
+    
+    func disposePictureInPicture() {
+        // MARK: reset
+        pictureInPictureView.disposeVideoView()
+        
+        if #available(iOS 15.0, *) {
+            (WaterbusViewController.pipVideoCallViewController as! AVPictureInPictureVideoCallViewController).view.removeAllSubviews()
+        }
+        
+        if (WaterbusViewController.pipController == nil) {
+            return
+        }
+        
+        WaterbusViewController.pipController = nil
+    }
+    
+    func stopPictureInPicture() {
+        if #available(iOS 15.0, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                WaterbusViewController.pipController?.stopPictureInPicture()
+            }
+        }
+    }
+}
+```
+
+- Extensions
+
+```swift
+extension WaterbusViewController: AVPictureInPictureControllerDelegate {
+    func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print(">> pictureInPictureControllerWillStopPictureInPicture")
+        self.pictureInPictureView.stopPictureInPictureView()
+    }
+    
+    func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print(">> pictureInPictureControllerWillStartPictureInPicture")
+        self.pictureInPictureView.updateLayoutVideoVideo()
+    }
+    
+    func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
+        print("Unable start pip error:", error.localizedDescription)
+    }
+}
+
+// create an extension for all UIViewControllers
+extension UIViewController {
+    /**
+     Add a flutter sub view to the UIViewController
+     sets constraints to edge to edge, covering all components on the screen
+     */
+    func addFlutterView(with engine: FlutterEngine) {
+        // create the flutter view controller
+        let flutterViewController = FlutterViewController(engine: engine, nibName: nil, bundle: nil)
+        
+        addChild(flutterViewController)
+        
+        guard let flutterView = flutterViewController.view else { return }
+        
+        // allows constraint manipulation
+        flutterView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(flutterView)
+        
+        // set the constraints (edge-to-edge) to the flutter view
+        let constraints = [
+            flutterView.topAnchor.constraint(equalTo: view.topAnchor),
+            flutterView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            flutterView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            flutterView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ]
+        
+        // apply (activate) the constraints
+        NSLayoutConstraint.activate(constraints)
+        
+        flutterViewController.didMove(toParent: self)
+
+        // updates the view with configured layout
+        flutterView.layoutIfNeeded()
+    }
+}
+```
+
+- Replace class in `Main.storyboard` by `WaterbusViewController`:
+
+![PiP iOS](https://i.ibb.co/Jcxs50N/ios-pip.png)
+
+### Create a view that displays Video if the camera is turned on, and an view when the camera is turned off
+
+```swift
+class PictureInPictureView: UIView {
+    // MARK: Private
+    private var myUserNameCard: UserView = UserView()
+    private var remoteUserNameCard: UserView = UserView()
+    private var localView: UIView = UIView()
+    private var remoteView: UIView = UIView()
+    private var remoteRenderer: RTCMTLVideoView?
+    private var peerConnectionId: String?
+    private var remoteStreamId: String?
+    private var isLocalCameraEnable: Bool = false
+    private var isRemoteCameraEnable: Bool = false
+    
+    private var pictureInPictureIsRunning: Bool = false
+    
+    // MARK: Funcs
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+```
+
+Setup Child View
+
+```swift
+    func setupView() {
+        // MARK: Setup subviews
+        localView = UIView()
+        localView.clipsToBounds = true
+        remoteView = UIView()
+        remoteView.clipsToBounds = true
+        
+        // MARK: add to parent view
+        addSubview(localView)
+        addSubview(remoteView)
+        configurationLayoutConstrains()
+        
+        // MARK: add user card view to subviews
+        self.addAvatarView()
+        self.configurationLayoutConstraintUserNameCard()
+    }
+    
+    func addAvatarView() {
+        // Add local and remote avatar
+        myUserNameCard = UserView()
+        myUserNameCard.setUserName(userName: "You")
+        myUserNameCard.contentMode = .scaleAspectFit
+        localView.addSubview(myUserNameCard)
+        
+        remoteUserNameCard = UserView()
+        remoteUserNameCard.contentMode = .scaleAspectFit
+        remoteView.addSubview(remoteUserNameCard)
+    }
+
+    func setRemoteInfo(peerConnectionId: String, remoteStreamId: String, isRemoteCameraEnable: Bool, remoteAvatar: String, remoteName: String) {
+        self.peerConnectionId = peerConnectionId
+        self.remoteStreamId = remoteStreamId
+        self.isRemoteCameraEnable = isRemoteCameraEnable
+        self.remoteUserNameCard.setAvatar(avatar: remoteAvatar)
+        self.remoteUserNameCard.setUserName(userName: remoteName)
+    }
+
+    func configurationLayoutConstrains() {
+        // Enable Autolayout
+        localView.translatesAutoresizingMaskIntoConstraints = false
+        remoteView.translatesAutoresizingMaskIntoConstraints = false
+        
+        localView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+        localView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
+        localView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5).isActive = true
+        localView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+        
+        remoteView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+        remoteView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+        remoteView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5).isActive = true
+        remoteView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+    }
+    
+    func configurationLayoutConstraintForRenderer() {
+        if (self.remoteRenderer == nil) {
+            return
+        }
+        
+        self.remoteRenderer!.translatesAutoresizingMaskIntoConstraints = false
+        let constraints = [
+            self.remoteRenderer!.leadingAnchor.constraint(equalTo: remoteView.leadingAnchor),
+            self.remoteRenderer!.trailingAnchor.constraint(equalTo: remoteView.trailingAnchor),
+            self.remoteRenderer!.topAnchor.constraint(equalTo: remoteView.topAnchor),
+            self.remoteRenderer!.bottomAnchor.constraint(equalTo: remoteView.bottomAnchor)
+        ]
+        self.remoteView.addConstraints(constraints)
+        self.remoteRenderer!.bounds = self.remoteView.frame
+    }
+    
+    func configurationLayoutConstraintUserNameCard() {
+        myUserNameCard.translatesAutoresizingMaskIntoConstraints = false
+        remoteUserNameCard.translatesAutoresizingMaskIntoConstraints = false
+        
+        let constraintsLocal = [
+            self.myUserNameCard.leadingAnchor.constraint(equalTo: localView.leadingAnchor),
+            self.myUserNameCard.trailingAnchor.constraint(equalTo: localView.trailingAnchor),
+            self.myUserNameCard.topAnchor.constraint(equalTo: localView.topAnchor),
+            self.myUserNameCard.bottomAnchor.constraint(equalTo: localView.bottomAnchor)
+        ]
+        let constraintsRemote = [
+            self.remoteUserNameCard.leadingAnchor.constraint(equalTo: remoteView.leadingAnchor),
+            self.remoteUserNameCard.trailingAnchor.constraint(equalTo: remoteView.trailingAnchor),
+            self.remoteUserNameCard.topAnchor.constraint(equalTo: remoteView.topAnchor),
+            self.remoteUserNameCard.bottomAnchor.constraint(equalTo: remoteView.bottomAnchor)
+        ]
+        self.localView.addConstraints(constraintsLocal)
+        self.remoteView.addConstraints(constraintsRemote)
+        self.myUserNameCard.bounds = self.localView.frame
+        self.remoteUserNameCard.bounds = self.remoteView.frame
+    }
+    
+    func configurationVideoView() {
+        if (remoteStreamId == nil || peerConnectionId == nil) {
+            return
+        }
+        
+        if #available(iOS 15.0, *) {
+            // Remote
+            if (self.isRemoteCameraEnable) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    self.addRemoteRendererToView()
+                }
+            }
+        }
+    }
+```
+
+### Get VideoFrame from WebRTC to display on the view we designed in the step above
+
+```swift
+    func addRemoteRendererToView() {
+        self.remoteRenderer = RTCMTLVideoView()
+        self.remoteRenderer!.contentMode = .scaleAspectFit
+        self.remoteRenderer!.videoContentMode = .scaleAspectFill
+        
+        // Get RemoteMTLVideoView
+        let mediaRemoteStream = FlutterWebRTCPlugin.sharedSingleton().stream(forId: self.remoteStreamId, peerConnectionId: self.peerConnectionId)
+        mediaRemoteStream?.videoTracks.first?.add(self.remoteRenderer!)
+        
+        self.remoteView.addSubview(self.remoteRenderer!)
+        self.configurationLayoutConstraintForRenderer()
+    }
+```
+
+### Implement MethodChannel to execute from Flutter
+
+- iOS Side:
+
+```swift
+        pictureInPictureChannel.setMethodCallHandler({
+            (call: FlutterMethodCall, result: @escaping  FlutterResult)  -> Void in
+            switch (call.method) {
+            case "startPictureInPicture":
+                let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+                let remoteStreamId = arguments["remoteStreamId"] as? String ?? ""
+                let peerConnectionId = arguments["peerConnectionId"] as? String ?? ""
+                let isRemoteCameraEnable = arguments["isRemoteCameraEnable"] as? Bool ?? false
+                let myAvatar = arguments["myAvatar"] as? String ?? ""
+                let remoteAvatar = arguments["remoteAvatar"] as? String ?? ""
+                let remoteName = arguments["remoteName"] as? String ?? ""
+                
+                WaterbusViewController.shared.configurationPictureInPicture(result: result, peerConnectionId: peerConnectionId, remoteStreamId: remoteStreamId, isRemoteCameraEnable: isRemoteCameraEnable, myAvatar: myAvatar, remoteAvatar: remoteAvatar, remoteName: remoteName)
+            case "updatePictureInPicture":
+                let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+                let peerConnectionId = arguments["peerConnectionId"] as? String ?? ""
+                let remoteStreamId = arguments["remoteStreamId"] as? String ?? ""
+                let isRemoteCameraEnable = arguments["isRemoteCameraEnable"] as? Bool ?? false
+                let remoteAvatar = arguments["remoteAvatar"] as? String ?? ""
+                let remoteName = arguments["remoteName"] as? String ?? ""
+                WaterbusViewController.shared.updatePictureInPictureView(result, peerConnectionId: peerConnectionId, remoteStreamId: remoteStreamId, isRemoteCameraEnable: isRemoteCameraEnable, remoteAvatar: remoteAvatar, remoteName: remoteName)
+            case "updateState":
+                let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+                let isRemoteCameraEnable = arguments["isRemoteCameraEnable"] as? Bool ?? false
+                WaterbusViewController.shared.updateStateUserView(result, isRemoteCameraEnable: isRemoteCameraEnable)
+            case "stopPictureInPicture":
+                WaterbusViewController.shared.disposePictureInPicture()
+                result(true)
+            default:
+                result(FlutterMethodNotImplemented)
+            }
+        })
+```
+
+### Flutter Side
+
+```dart
+final MethodChannel _pipChannel = const MethodChannel("waterbus/picture-in-picture");
+```
+
+- Start PiP
+
+```dart
+  Future<void> startPip({
+    required String remoteStreamId,
+    required String peerConnectionId,
+    required String myAvatar,
+    required String remoteAvatar,
+    required String remoteName,
+    required bool isRemoteCameraEnable,
+  }) async {
+    if (!Platform.isIOS ||
+        DateTime.now().difference(_latestUpdate).inSeconds <= 2) return;
+
+    if (_isCreatedPip) {
+      if (_currentRemote == remoteStreamId) {
+        _pipChannel.invokeMethod("updateState", {
+          "isRemoteCameraEnable": isRemoteCameraEnable,
+        });
+      } else {
+        _currentRemote = remoteStreamId;
+        _pipChannel.invokeMethod("updatePictureInPicture", {
+          "remoteStreamId": remoteStreamId,
+          "peerConnectionId": peerConnectionId,
+          "isRemoteCameraEnable": isRemoteCameraEnable,
+          "remoteAvatar": remoteAvatar,
+          "remoteName": remoteName,
+        });
+      }
+    } else {
+      _currentRemote = remoteStreamId;
+      _isCreatedPip = true;
+      _pipChannel.invokeMethod("startPictureInPicture", {
+        "remoteStreamId": remoteStreamId,
+        "peerConnectionId": peerConnectionId,
+        "isRemoteCameraEnable": isRemoteCameraEnable,
+        "myAvatar": myAvatar,
+        "remoteAvatar": remoteAvatar,
+        "remoteName": remoteName,
+      });
+    }
+
+    _latestUpdate = DateTime.now();
+  }
+```
+
+- Stop PiP
+
+```dart
+  void stopPip() {
+    if (!_isCreatedPip) return;
+
+    _isCreatedPip = false;
+    _currentRemote = '';
+    _pipChannel.invokeMethod("stopPictureInPicture");
+  }
+```

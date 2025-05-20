@@ -1,8 +1,23 @@
-import { DocsLayout, type DocsLayoutProps } from "fumadocs-ui/layouts/notebook";
-import { cloneElement, ReactElement, type ReactNode } from "react";
-import { baseOptions } from "@/app/layout.config";
-import { source } from "@/lib/source";
-import { GithubInfo } from "fumadocs-ui/components/github-info";
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { cloneElement, type ReactElement, type ReactNode } from 'react';
+import { baseOptions } from '@/app/layout.config';
+import { source } from '@/lib/source';
+
+export default function Layout({ children }: { children: ReactNode }) {
+  return (
+    <DocsLayout tree={source.pageTree} {...baseOptions} sidebar={{
+      tabs: {
+        transform: (option, node) => ({
+          ...option,
+          icon: node.icon ? <MyIcon icon={node.icon} /> : undefined,
+        }),
+      },
+    }}>
+      {children}
+    </DocsLayout>
+  );
+}
+
 
 interface MyIconProps {
   icon: ReactElement;
@@ -18,35 +33,16 @@ function MyIcon({ icon }: MyIconProps) {
 
   return (
     <div
-      className="rounded-md p-1 shadow-lg inline-flex items-center justify-center"
-      style={{ border: `1px solid ${iconProps.color ?? "#ccc"}` }}
+      className="rounded-md p-1 shadow-lg ring-2 inline-flex items-center justify-center [&_svg]:size-6.5 md:[&_svg]:size-5"
+      style={{
+        color: iconProps.color ?? "#ccc",
+        border: `1px solid color-mix(in oklab, ${iconProps.color ?? "#ccc"} 50%, transparent)`,
+        //@ts-ignore
+        '--tw-ring-color': `color-mix(in oklab, ${iconProps.color ?? "#ccc"} 20%, transparent)`
+      }}
     >
       {styledIcon}
     </div>
   );
-}
-
-const docsOptions: DocsLayoutProps = {
-  ...baseOptions,
-  tree: source.pageTree,
-  sidebar: {
-    tabs: {
-      transform: (option, node) => ({
-        ...option,
-        icon: node.icon ? <MyIcon icon={node.icon} /> : undefined,
-      }),
-    },
-  },
-  links: [
-    {
-      type: "custom",
-      children: (
-        <GithubInfo owner="waterbustech" repo="waterbus" className="lg:-mx-2" />
-      ),
-    },
-  ],
-};
-
-export default function Layout({ children }: { children: ReactNode }) {
-  return <DocsLayout {...docsOptions}>{children}</DocsLayout>;
+  
 }

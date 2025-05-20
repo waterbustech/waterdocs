@@ -13,17 +13,17 @@ export const source = loader({
 
     let color: string | undefined;
     switch (icon) {
-      case "Building":
-        color = "#ffb3d1";
+      case "Package":
+        color = "#cba6f7";
         break;
-      case "Hammer":
-        color = "#a8c5f7";
+      case "Puzzle":
+        color = "#89b4fa"; 
         break;
-      case "Repeat2":
-        color = "#a8f7b1";
+      case "FileCode":
+        color = "#a6e3a1";
         break;
       default:
-        color = "";
+        color = "#bac2de"; // Surface tone (fallback)
     }
 
     return createElement(icons[icon as keyof typeof icons], {
@@ -35,7 +35,6 @@ export const source = loader({
   },
   // it assigns a URL to your pages
   baseUrl: "/",
-  
   source: createMDXSource(allDocs, allMetas),
   pageTree: {
     attachFile,

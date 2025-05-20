@@ -3,11 +3,14 @@ import { withContentCollections } from "@content-collections/next";
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  images: {
+    domains: ["media.waterbus.tech", "i.ibb.co"],
+  },
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/backend',
+        source: "/",
+        destination: "/core",
         permanent: true,
       },
     ];

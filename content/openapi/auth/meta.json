@@ -1,0 +1,5 @@
+{
+    "title": "Authorization",
+    "pages": ["post", "get", "presigned-url"],
+    "defaultOpen": true
+}

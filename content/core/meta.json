@@ -1,7 +1,7 @@
 {
-  "title": "Backend",
-  "description": "The Media Server",
-  "icon": "Building",
+  "title": "Core",
+  "description": "The Waterbus Core",
+  "icon": "Package",
   "pages": [
     "---Introduction---",
     "index",

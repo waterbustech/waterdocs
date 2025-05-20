@@ -8,11 +8,11 @@ Waterbus is built around three key entities that structure how users join, inter
 
 ---
 
-## 🏠 Room
+## Room
 
 A **Room** is a logical space where real-time media interaction happens. It acts as a container for participants and members.
 
-### 🔑 Characteristics
+### Characteristics
 
 - Identified by a unique `room_id`.
 - Created implicitly when the first participant joins.
@@ -22,11 +22,11 @@ A **Room** is a logical space where real-time media interaction happens. It acts
 
 ---
 
-## 👤 Participant
+## Participant
 
 A **Participant** represents a connected client who has joined a room. Each active device in the session corresponds to a participant.
 
-### 🔑 Characteristics
+### Characteristics
 
 - Created when a client successfully joins a room.
 - Destroyed when the client leaves the room or disconnects.
@@ -35,7 +35,7 @@ A **Participant** represents a connected client who has joined a room. Each acti
   - Media state (published tracks, subscriptions).
 - Authenticated via access token or room secret (if required).
 
-### 🧠 Responsibilities
+### Responsibilities
 
 - Negotiates WebRTC connection with the SFU.
 - Publishes media (audio/video/screenshare).
@@ -44,11 +44,11 @@ A **Participant** represents a connected client who has joined a room. Each acti
 
 ---
 
-## 👥 Member
+## Member
 
 A **Member** is a registered or invited identity within a room. It does **not** represent a connected device, but a logical presence that may be associated with future participants.
 
-### 🔑 Characteristics
+### Characteristics
 
 - Exists even when not connected.
 - Used for:
@@ -60,7 +60,7 @@ A **Member** is a registered or invited identity within a room. It does **not** 
 
 ---
 
-## 🛡️ Roles
+## Roles
 
 Waterbus defines roles to control permissions and behavior inside a room:
 
@@ -71,7 +71,7 @@ Waterbus defines roles to control permissions and behavior inside a room:
 | `Speaker` | Can publish audio/video into the room.                                    |
 | `Viewer`  | Read-only; can subscribe but cannot publish or speak.                     |
 
-### 🔁 Role Scopes by Room Type
+### Role Scopes by Room Type
 
 - **Video Conferencing**:
   - Uses only `Owner` and `Speaker`.
@@ -82,7 +82,7 @@ Waterbus defines roles to control permissions and behavior inside a room:
 
 ---
 
-## 🧩 Summary
+## Summary
 
 | Concept      | Represents                   | Created When             | Key Role                                 |
 |--------------|------------------------------|---------------------------|-------------------------------------------|

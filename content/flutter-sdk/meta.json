@@ -1,6 +1,20 @@
 {
     "title": "Flutter SDK",
     "description": "The Flutter SDK",
-    "icon": "Hammer",
+    "icon": "Puzzle",
+    "pages": [
+      "---Installation---",
+      "index",
+      "---Usages---",
+      "usage",
+      "---Advanced---",
+      "picture-in-picture",
+      "virtual-background",
+      "screen-sharing",
+      "beauty-filters",
+      "---Other Plugins---",
+      "moq-client",
+      "hls-player"
+    ],
     "root": true
   }

@@ -36,7 +36,7 @@ export default async function Page(props: {
         <div style={optionDivStyle}>
           <LLMCopyButton slug={params.slug} />
           <EditOnGitHub
-            url={`https://github.com/lambiengcode/waterdocs/tree/main/content/docs/${page.file.path}`}
+            url={`https://github.com/lambiengcode/waterdocs/tree/main/content/${page.file.path}`}
           ></EditOnGitHub>
         </div>
         <MDXContent code={page.data.body} components={getMDXComponents()} />

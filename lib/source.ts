@@ -12,13 +12,13 @@ export const source = loader({
     let color: string | undefined;
     switch (icon) {
       case "Building":
-        color = "#dea584";
+        color = "#ffb3d1";
         break;
       case "Hammer":
-        color = "#3b82f6";
+        color = "#a8c5f7";
         break;
       case "Repeat2":
-        color = "#00ff22";
+        color = "#a8f7b1";
         break;
       default:
         color = "";

@@ -3,6 +3,8 @@ import { loader } from "fumadocs-core/source";
 import { icons } from "lucide-react";
 import { createElement } from "react";
 import { createOpenAPI, attachFile } from "fumadocs-openapi/server";
+import { allDocs, allMetas } from "content-collections";
+import { createMDXSource } from "@fumadocs/content-collections";
 
 // See https://fumadocs.vercel.app/docs/headless/source-api for more info
 export const source = loader({
@@ -32,8 +34,9 @@ export const source = loader({
     });
   },
   // it assigns a URL to your pages
-  baseUrl: "/docs",
-  source: docs.toFumadocsSource(),
+  baseUrl: "/",
+  
+  source: createMDXSource(allDocs, allMetas),
   pageTree: {
     attachFile,
   },

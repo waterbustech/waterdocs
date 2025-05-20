@@ -1,10 +1,17 @@
-import { createMDX } from 'fumadocs-mdx/next';
-
-const withMDX = createMDX();
+import { withContentCollections } from "@content-collections/next";
 
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/backend',
+        permanent: true,
+      },
+    ];
+  },
 };
 
-export default withMDX(config);
+export default withContentCollections(config);

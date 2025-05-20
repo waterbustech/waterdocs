@@ -9,6 +9,10 @@
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
+    "@content-collections/core": "^0.8.2",
+    "@content-collections/mdx": "^0.2.2",
+    "@content-collections/next": "^0.2.6",
+    "@fumadocs/content-collections": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

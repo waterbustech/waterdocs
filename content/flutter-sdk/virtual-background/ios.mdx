@@ -12,11 +12,15 @@ title: iOS
 4. VideoProcessor: It is an interface provided by [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) to update videoFrames produced by videoSource .
 5. MediaStream: It is an API related to [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) which provides support for streaming audio and video data. It consists of zero or more [MediaStreamTrack](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack) objects, representing various audio or video tracks
 
-## Apply in the code
+---
 
-### Idea of virtual background in WebRTC
+## The Idea
 
-<img src="../../img/vb-exp.gif"/>
+<div align="center">
+  <img src="/images/idea-virtual-background.drawio.svg" />
+</div>
+
+---
 
 ### Create a class to get VideoFrame to separate background
 
@@ -79,6 +83,8 @@ import WebRTC
 }
 ```
 
+---
+
 ### Set delegate VideoSouce to getting the VideoFrame from WebRTC
 
 ```objective-c
@@ -86,6 +92,8 @@ videoPipe = [[RTCVideoPipe alloc] initWithVideoSource: videoSource];
         
 [videoSource setDelegate:videoPipe];
 ```
+
+---
 
 ### Create a class implement VisionKit to separate background
 
@@ -150,6 +158,8 @@ var maskRequest: VNGeneratePersonInstanceMaskRequest?
     }
 }
 ```
+
+---
 
 ### Draw segmented and background on canvas
 

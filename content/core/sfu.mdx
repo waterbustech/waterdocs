@@ -1,3 +1,65 @@
 ---
-title: SFU
+title: SFU Node
 ---
+
+import { SatelliteDish, Video } from "lucide-react";
+
+<Callout title="What is an SFU?" icon={<SatelliteDish />}>
+  A **Selective Forwarding Unit (SFU)** receives media streams from participants
+  and forwards them to others, without decoding or re-encoding. This enables
+  **low latency** and **scalable** real-time communication.
+</Callout>
+
+Waterbus's SFU is the heart of its real-time media engine. It is built in Rust for performance and reliability, and it supports advanced WebRTC features like **Simulcast**, **SVC**, and **bandwidth-aware forwarding**.
+
+---
+
+## Responsibilities
+
+The SFU node is responsible for:
+
+- 📡 **Receiving Peer Connections**  
+  Accepts WebRTC peer connections from clients, handles ICE, DTLS, and SRTP.
+
+- 🔀 **Routing Media**  
+  Forwards RTP streams to subscribed participants with minimal delay.
+
+- ⚙️ **Adaptive Quality Switching**  
+  Dynamically switches simulcast or SVC layers based on network conditions (REMB, TWCC).
+
+- 🔁 **Track Replacement**  
+  Supports seamless quality transitions by replacing tracks on-the-fly.
+
+- 📤 **Forwarding to Egress**  
+  Forwards selected RTP streams to HLS or MoQ writers for recording or live broadcast.
+
+---
+
+## How It Works
+
+Each participant connects to the SFU via WebRTC. The SFU:
+
+1. Negotiates peer connection (ICE/DTLS/SRTP)
+2. Receives encoded media (usually VP8/VP9/H264, Opus)
+3. Forwards RTP packets to other peers (one-to-many)
+4. Applies bandwidth estimation and congestion control
+5. Rewrites and switches tracks if needed
+
+Waterbus supports both:
+
+- **Simulcast**: Multiple resolutions of the same video
+- **SVC (Scalable Video Coding)**: Encodes multiple quality layers into a single stream
+
+---
+
+## Architecture
+
+The SFU node works alongside the **Egress module** for media output, and communicates with the **Dispatcher** to receive room assignments.
+
+```txt
+[Client A] ──► SFU ──► [Client B]
+                 └──► [MoQ Writer]
+                 └──► [HLS Writer]
+```
+
+All SFU nodes are stateless and can be scaled horizontally. Room state is managed externally by the Dispatcher using etcd.

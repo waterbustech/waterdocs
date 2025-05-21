@@ -1,3 +1,104 @@
 ---
 title: Architecture
 ---
+
+Waterbus is a modular, distributed media infrastructure built for real-time performance, cost-efficiency, and scalability. It separates concerns into clear layers, while grouping key components together in real-world deployments.
+
+---
+
+## 🧱 Layered Architecture
+
+At a logical level, Waterbus consists of four main layers:
+
+<div align="center">
+<img src="/images/layer-arch.svg" alt="Architecture Diagram" />
+</div>
+
+### 1. Signaling Layer
+- Handles WebSocket/Socket.IO signaling from clients.
+- Manages join/leave, publish/subscribe, renegotiation events.
+- Maintains session states and initiates routing.
+
+### 2. Dispatcher Layer
+- Performs room assignment and SFU selection.
+- Uses **etcd** for service discovery and live node tracking.
+- Balances load and routes clients to the optimal SFU node.
+
+### 3. SFU Layer
+- Core of media routing: RTP forwarding, congestion control, simulcast/SVC adaptation.
+- Receives peer connections and routes media with minimal delay.
+- Supports REMB, TWCC, and track replacement mechanisms.
+
+### 4. Egress Layer
+- Transforms real-time media into broadcast formats:
+  - **HLS / LL-HLS** for traditional live streaming.
+  - **MoQ** for scalable low-latency broadcasting.
+- Uses modular writers (`HlsWriter`, `MoQWriter`, etc.).
+
+---
+
+## ⚙️ Deployment Topology
+
+While logically separated, Waterbus components are grouped in practice to optimize for latency and performance:
+
+<img src="/images/arch.svg" alt="Architecture Diagram" />
+
+### Signaling + Dispatcher Node
+- Co-located to reduce signaling latency.
+- Exposes public WebSocket and HTTP APIs.
+- Manages room creation and SFU assignment.
+
+### SFU + Egress Node
+- Media engine colocated with stream output.
+- Avoids cross-node media copy for lower CPU/network usage.
+- Stateless design for easy horizontal scaling.
+
+---
+
+## 🧩 Coordination & Communication
+
+### Service Coordination
+- **etcd**: Backbone of dynamic service discovery and room lifecycle management.
+- **Redis (optional)**: Pub/sub mechanism for signaling across multiple instances.
+
+### Internal Protocols
+- **QUIC**: Used for high-performance communication between services.
+- **gRPC**: Control plane API across Waterbus modules.
+
+---
+
+## 🛰️ Deployment Modes
+
+Waterbus supports multiple environments:
+
+### 🧪 Local Development
+- All layers combined into a single binary.
+- Fast iteration and local testing.
+
+### 🌐 Staging
+- Distributed nodes: signaling, SFU, and Redis.
+- In-memory room and participant state.
+
+### ☁️ Production
+- Fully distributed on Kubernetes.
+- Etcd, persistent storage, CDN integration, and autoscaling.
+- Deployed via Helm chart with observability stack.
+
+---
+
+## 📊 Observability & Extensibility
+
+Waterbus is built with observability and modularity in mind:
+
+### Observability
+- 📈 Prometheus metrics for performance and traffic.
+- 🪵 JSON structured logging.
+- 🔍 OpenTelemetry-based tracing across services.
+
+### Extensibility
+- Pluggable egress architecture (`HlsWriter`, `MoQWriter`, more coming).
+- OpenAPI-defined signaling and control interfaces.
+
+---
+
+> ℹ️ You can dive deeper into setup and deployment in the [Getting Started Guide](/docs/getting-started), or explore our [OpenAPI Spec](/openapi/auth/post) to build your own integrations.

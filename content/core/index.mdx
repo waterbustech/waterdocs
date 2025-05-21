@@ -6,9 +6,9 @@ import { Package, Puzzle, FileCode } from "lucide-react";
 
 ## Introduction
 
-**Waterbus** is a modern, high-performance **SFU (Selective Forwarding Unit)** and real-time media infrastructure designed for the next generation of interactive applications. Built in Rust, Waterbus provides scalable, low-latency media routing with support for **WebRTC**, **SVC**, **simulcast**, and **live streaming** over **HLS/LL-HLS**. It is designed with modularity and observability in mind, and includes SDKs, CLI tools, and server components to help developers integrate real-time media into their apps effortlessly.
+**Waterbus** is a modern, high-performance **media server** and **real-time infrastructure** designed for the next generation of interactive applications. Built in Rust, it supports **WebRTC**, **Simulcast**, **SVC**, and egress to **HLS**, **LL-HLS**, and **MoQ** — optimized for low latency, scalability, and cost-efficiency.
 
-**Waterbus** has different parts:
+Waterbus automatically handles peer-to-peer connections for up to 2 participants. When a third participant joins, the session seamlessly migrates to the **SFU (Selective Forwarding Unit)** — ensuring optimal performance without user disruption.
 
 <Cards>
   <Card icon={<Package color="#cba6f7" />} href="/" title="Waterbus Core">
@@ -27,54 +27,80 @@ import { Package, Puzzle, FileCode } from "lucide-react";
 
 ---
 
-## What is Waterbus?
+## Why Waterbus Media Server?
 
-Waterbus is:
+Waterbus is purpose-built for teams and platforms that need **low-latency**, **high-quality**, and **cost-efficient** media delivery:
 
-- A **Rust-powered WebRTC SFU** designed for real-time audio/video routing.
-- A platform that supports **live streaming egress** to HLS and Low-Latency HLS.
-- A system built for **scalability** with **service discovery**, **load balancing**, and **room lifecycle management**.
-- A foundation for distributed media infrastructure, optimized for cloud-native environments.
+- ⚡ **P2P + SFU Hybrid** — Direct peer-to-peer for 1:1 calls, automatic SFU scaling for group sessions.
+- 🦀 **Rust Performance** — Low memory footprint, high concurrency, and zero-cost abstractions.
+- 🌐 **Cloud-Native** — Distributed architecture with service discovery, load balancing, and Helm chart support.
+- 🧩 **Modular Design** — Flexible egress writers (HLS, MoQ), CLI tools, and SDKs.
 
-Waterbus powers use cases where low-latency, high-quality media delivery matters — whether for video conferencing, collaborative apps, or live broadcasting.
+Whether it's a video meeting, livestream, or classroom — Waterbus adapts intelligently and efficiently.
 
 ---
 
 ## Use Cases
 
-- **Video Conferencing**: Scalable meetings with SFU-based forwarding and adaptive quality switching.
-- **Live Streaming**: One-to-many streaming with LL-HLS support for real-time audience engagement.
-- **Interactive Classrooms**: Low-latency communication for online learning and remote collaboration.
-- **Gaming Voice Chat**: Real-time voice infrastructure that scales with player concurrency.
-- **Media Egress & Recording**: Convert WebRTC sessions into HLS for recording or rebroadcasting.
+### 🧑‍💼 Low-Latency Meetings
+
+- Perfect for video conferencing, daily standups, or collaborative sessions.  
+- Waterbus starts with **peer-to-peer (P2P)** when there are two participants for ultra-low latency.  
+- As soon as a third participant joins, the session **automatically upgrades to SFU mode**, optimizing media forwarding and reducing bandwidth usage on clients.  
+- With **REMB** and **TWCC** support, Waterbus adapts stream quality in real-time to match network conditions — ensuring smooth and stable experiences across devices.
+
+### 🎙️ AMA-Style Broadcasts
+
+- Great for interactive Q&A sessions, online panels, or webinars where a few participants speak and many listen.  
+- Using **MoQ (Media over QUIC)**, Waterbus allows scalable, low-latency media delivery with selective forwarding.  
+- Speakers are forwarded efficiently to large audiences, while listeners benefit from fast startup time and minimal delay.  
+- MoQ also helps reduce server load and egress costs by leveraging shared delivery paths.
+
+### 📺 Traditional Live Streaming
+
+- Use Waterbus to stream to a wide audience with **HLS** or **Low-Latency HLS (LL-HLS)**.  
+- This is ideal for concerts, townhalls, sports events, or any broadcast-style content where compatibility and reach are critical.  
+- Streams can be recorded, restreamed, or distributed via CDN — giving you flexibility in how you scale and deliver your content.  
+- Waterbus provides modular output writers like `HlsWriter` that allow easy integration with cloud storage or CDN workflows.
 
 ---
 
 ## Features Overview
 
-- 🦀 **Rust Core** — High performance, memory safety, low-level control
-- 📡 **WebRTC SFU** — Supports Simulcast, SVC, TWCC, and REMB-based dynamic quality
-- 📤 **Egress** — HLS, MoQ, modular writers (`HlsWriter`, `MoQWriter`)
-- 🗺️ **Distributed Architecture** — Etcd-based service discovery, load balancing, dynamic room routing
-- 📱 **SDKs** — Flutter SDK (cross-platform), Server SDK _(coming soon)_
-- 🧪 **Waterbus CLI** — Dev/test automation tool
-- ☸️ **Helm Chart** — Easy Kubernetes deployment
+- 🦀 **Rust Core** — High performance, memory safety, low-level control  
+- 🔄 **P2P + SFU** — Automatically migrate from P2P to SFU at 3+ participants  
+- 📡 **WebRTC SFU** — Supports Simulcast, SVC, TWCC, and REMB  
+- 📤 **Egress** — Modular output via HLS, LL-HLS, and MoQ  
+- ☸️ **Distributed Architecture** — Etcd-based service discovery and room routing  
+- 📱 **SDKs** — Flutter SDK available, Server SDK coming soon  
+- 🧪 **CLI Tooling** — Developer utilities for testing and automation  
 
 ---
 
 ## Architecture Overview
 
-The Waterbus architecture is composed of multiple modular services:
-
 <img src="/images/arch.svg" alt="Architecture Diagram" />
 
-Each SFU Node handles:
+Each SFU Node is responsible for:
 
-- Peer connection setup
-- RTP/RTCP forwarding
-- Track replacement & bandwidth adaptation
-- Forwarding to egress modules
+- Establishing peer connections
+- Forwarding RTP/RTCP
+- Dynamic track replacement and quality adaptation
+- Streaming to external outputs (HLS, MoQ)
 
 <Callout title="Info">
-In production setups, Waterbus runs as multiple services communicating over QUIC/gRPC, with etcd ensuring coordination and dynamic room mapping.
+In production deployments, Waterbus runs as distributed services over QUIC/gRPC with etcd for coordination.
 </Callout>
+
+---
+
+## Enjoy
+
+Waterbus is built for developers who care about **performance**, **control**, and **user experience**. Whether you're prototyping a new idea or scaling a global platform, Waterbus is the media infrastructure that works with you.
+
+→ Get started with:
+- 🧑‍💻 [Quickstart Guide](/docs/getting-started)
+- ⚙️ [Running the SFU](/docs/sfu/install)
+- 📱 [Using the Flutter SDK](/flutter-sdk)
+
+Happy building 🚀

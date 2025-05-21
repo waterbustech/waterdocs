@@ -10,7 +10,11 @@
     "sfu",
     "egress",
     "---Usage---",
-    "getting_started",
+    "local",
+    "k8s",
+    "cli",
+    "---Integrate---",
+    "server-sdk",
     "---Explain---",
     "bandwidth_saving"
   ],

@@ -2,9 +2,9 @@
 title: Android
 ---
 
-## Apply in the code
-
 We will use `simple_pip_mode` to implement PiP on Android
+
+---
 
 ### Installation
 
@@ -25,11 +25,11 @@ simple_pip_mode: <latest_version>
   android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
   android:hardwareAccelerated="true"
   android:windowSoftInputMode="adjustResize"
-
-  android:supportsPictureInPicture="true" // [\!code focus]
+  android:supportsPictureInPicture="true" // [!code ++]
 ></activity>
 ```
 
+---
 
 ### Setting automatic pip mode
 
@@ -42,6 +42,8 @@ void _onEventChanged(CallbackPayload event) {
     }
 }
 ```
+
+---
 
 ### Setup PiP View
 

@@ -11,6 +11,7 @@ import { RateWrapper } from "@/components/rate_wrapper";
 import { EditOnGitHub, LLMCopyButton } from "./page.client";
 import { MDXContent } from '@content-collections/mdx/react';
 import { getMDXComponents } from '@/mdx-components';
+import { getGithubLastEdit } from "fumadocs-core/server";
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -22,8 +23,16 @@ export default async function Page(props: {
   const optionDivStyle = {
     display: "inline-flex",
   };
+
+  const time = await getGithubLastEdit({
+    owner: 'waterbustech',
+    repo: 'waterbus',
+    path: `content/${page.file.path}`,
+  }) || Date.now();
+  
   return (
     <DocsPage
+      lastUpdate={new Date(time)}
       tableOfContent={{
         style: "clerk",
       }}

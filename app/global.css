@@ -3,3 +3,16 @@
 @import 'fumadocs-ui/css/preset.css';
 @import 'fumadocs-openapi/css/preset.css';
 @import "tw-animate-css";
+
+.bg-radial-dark {
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1), transparent 70%);
+  }
+
+  .fill-primary path {
+    fill: #cba6f7;
+  }
+
+  .blur-background {
+    filter: blur(40px);
+    opacity: 0.3;
+  }

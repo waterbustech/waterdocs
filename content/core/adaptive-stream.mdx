@@ -1,0 +1,53 @@
+---
+title: Adaptive Stream
+description: Automatically adjust video quality based on view size and visibility to optimize performance and save bandwidth.
+---
+
+## Overview
+
+**Adaptive Stream** is a smart optimization that automatically selects the best video quality (resolution) for each subscriber, based on how and where the video is displayed — such as its **size on screen** and **whether it’s visible**.
+
+This helps deliver a good user experience while saving bandwidth, CPU, and battery — especially useful for mobile devices, small video tiles, or when the video is minimized.
+
+## How It Works
+
+When a user subscribes to a video track, **Adaptive Stream** looks at:
+
+- The **size** of the video element (e.g. small on mobile vs. large on desktop)
+- Whether the video is currently **visible** (e.g. hidden tab, minimized, or not in view)
+
+Then, it automatically chooses the **most appropriate video quality** from the simulcast layers:
+
+- 📱 On **mobile**, a video might be shown in a smaller tile → only **quarter resolution** is needed
+- 💻 On **desktop**, the same video could be larger → **half** or **full resolution** may be selected
+- 💤 If the video is **not visible** (e.g. background tab) → video may be paused or lowest resolution used
+
+### Example
+
+Let’s say a publisher is sending these simulcast layers:
+
+- **f** = Full resolution (e.g. 720p)
+- **h** = Half resolution (e.g. 360p)
+- **q** = Quarter resolution (e.g. 180p)
+
+Depending on the subscriber’s video view:
+
+- **Small view** on mobile → subscribe to **q**
+- **Medium view** in a sidebar → subscribe to **h**
+- **Large view** (e.g. active speaker in fullscreen) → subscribe to **f**
+
+This adjustment is **automatic** and happens in real time as users resize windows or switch layouts.
+
+## Benefits
+
+✅ **Optimized Bandwidth Usage**  
+Only the needed video quality is delivered — saving data for both client and server.
+
+✅ **Improved Device Performance**  
+Lower resolutions mean less work for the device's CPU and GPU, especially on low-end or mobile hardware.
+
+✅ **Better User Experience**  
+Users get smooth video that matches the context — no need to waste resources on high-res video that’s shown in a tiny window.
+
+✅ **Responsive and Dynamic**  
+Automatically reacts to layout changes like resizing windows, switching speakers, or entering picture-in-picture mode.

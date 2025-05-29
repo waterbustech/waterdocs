@@ -9,14 +9,24 @@
     "architecture",
     "sfu",
     "egress",
+    "hybrid-topology",
+    "dynacast",
+    "adaptive-stream",
+    "demo",
+    "example-architecture",
     "---Usage---",
     "local",
     "k8s",
     "cli",
     "---Integrate---",
     "server-sdk",
-    "---Explain---",
-    "bandwidth_saving"
+    "---Explains---",
+    "bandwidth-saving",
+    "faq",
+    "---Knowledges---",
+    "[Media over Quic](https://quic.video/)",
+    "[WebRTC for the Curious](https://webrtcforthecurious.com/)",
+    "[Issues](https://github.com/waterbustech/waterbus-rs/issues/)"
   ],
   "root": true
 }

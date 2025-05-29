@@ -1,8 +1,7 @@
 ---
 title: Concept
+description: 📚 Room, Participant, and Member
 ---
-
-📚 Core Concepts: Room, Participant, and Member
 
 Waterbus is built around three key entities that structure how users join, interact, and exchange media in a session: **Room**, **Participant**, and **Member**. Understanding these concepts is essential for integrating signaling, permissions, and media routing effectively.
 
@@ -64,16 +63,17 @@ A **Member** is a registered or invited identity within a room. It does **not** 
 
 Waterbus defines roles to control permissions and behavior inside a room:
 
-| Role      | Description                                                               |
-|-----------|---------------------------------------------------------------------------|
-| `Owner`   | Room creator; full permissions (kick, promote, mute, close room, etc.)    |
-| `Moderator` | Can moderate other participants (mute, assign roles, etc.)              |
-| `Speaker` | Can publish audio/video into the room.                                    |
-| `Viewer`  | Read-only; can subscribe but cannot publish or speak.                     |
+| Role        | Description                                                            |
+| ----------- | ---------------------------------------------------------------------- |
+| `Owner`     | Room creator; full permissions (kick, promote, mute, close room, etc.) |
+| `Moderator` | Can moderate other participants (mute, assign roles, etc.)             |
+| `Speaker`   | Can publish audio/video into the room.                                 |
+| `Viewer`    | Read-only; can subscribe but cannot publish or speak.                  |
 
 ### Role Scopes by Room Type
 
 - **Video Conferencing**:
+
   - Uses only `Owner` and `Speaker`.
   - All participants can talk and share media.
 
@@ -84,11 +84,11 @@ Waterbus defines roles to control permissions and behavior inside a room:
 
 ## Summary
 
-| Concept      | Represents                   | Created When             | Key Role                                 |
-|--------------|------------------------------|---------------------------|-------------------------------------------|
-| `Room`       | A media session container    | First participant joins   | Holds participants and members            |
-| `Participant`| A connected client session   | On join                   | Publishes/subscribes to media             |
-| `Member`     | An identity in the room      | On invitation or public   | Used to authorize and assign roles        |
+| Concept       | Represents                 | Created When            | Key Role                           |
+| ------------- | -------------------------- | ----------------------- | ---------------------------------- |
+| `Room`        | A media session container  | First participant joins | Holds participants and members     |
+| `Participant` | A connected client session | On join                 | Publishes/subscribes to media      |
+| `Member`      | An identity in the room    | On invitation or public | Used to authorize and assign roles |
 
 ---
 

@@ -11,7 +11,7 @@ const config = {
       {
         source: "/",
         destination: "/core",
-        permanent: true,
+       permanent: true,
       },
     ];
   },

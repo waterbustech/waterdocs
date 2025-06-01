@@ -5,9 +5,11 @@ import { createElement } from "react";
 import { createOpenAPI, attachFile } from "fumadocs-openapi/server";
 import { allDocs, allMetas } from "content-collections";
 import { createMDXSource } from "@fumadocs/content-collections";
+import { i18n } from '@/lib/i18n';
 
 // See https://fumadocs.vercel.app/docs/headless/source-api for more info
 export const source = loader({
+  i18n,
   icon(icon) {
     if (!icon || !(icon in icons)) return;
 
@@ -38,7 +40,7 @@ export const source = loader({
   source: createMDXSource(allDocs, allMetas),
   pageTree: {
     attachFile,
-  },
+  }
 });
 
 export const openapi = createOpenAPI({

@@ -1,0 +1,49 @@
+---
+title: Hybrid Topology
+description: Start with peer-to-peer (P2P) for one-on-one calls, and automatically switch to an SFU (Selective Forwarding Unit) when more participants join.
+---
+
+## Overview
+
+<img src="/images/migrate-sfu.svg" width="100%" />
+
+## How It Works
+
+The **Hybrid Topology** combines the strengths of Peer-to-Peer (P2P) and Selective Forwarding Unit (SFU) architectures to optimize media transmission based on the number of participants:
+
+1. **One-on-One Calls (P2P Mode):**
+
+   - When a call starts with just two participants, media streams are sent directly between them using a **Peer-to-Peer** connection.
+   - This minimizes latency and reduces server load, as media doesn’t pass through a central server.
+
+2. **Adding a Third Participant (Migration to SFU):**
+
+   - When a third person joins the call, the system automatically transitions to **SFU mode**.
+   - All participants send their media streams to the SFU server, which then forwards the streams to everyone else.
+   - The migration is seamless — users won’t need to restart the call.
+
+3. **Dynamic Room Management:**
+   - The backend keeps track of participant counts and manages the transition logic.
+   - Rooms are upgraded from P2P to SFU in real time based on a predefined threshold (typically >2 users).
+
+## Pros of Hybrid Topology
+
+✅ **Optimized for Performance**
+
+- P2P is ideal for 1-on-1 calls: low latency, low server cost.
+- SFU scales well for group calls: offloads processing from clients.
+
+✅ **Cost-Effective**
+
+- Media is sent directly between users when possible, reducing bandwidth and server usage.
+- SFU is only used when necessary, minimizing infrastructure costs.
+
+✅ **Seamless User Experience**
+
+- Transitioning from P2P to SFU is automatic and invisible to end users.
+- No need to rejoin the room or refresh the session.
+
+✅ **Scalable Design**
+
+- Suitable for a wide range of use cases — from private 1:1 chats to larger group meetings.
+- Future-proof for features like recording, streaming, or media analytics via the SFU.

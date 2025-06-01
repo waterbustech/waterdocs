@@ -1,0 +1,108 @@
+---
+title: SFU
+---
+
+import { SatelliteDish, Video } from "lucide-react";
+
+<Callout title="What is an SFU?" icon={<SatelliteDish />}>
+  A **Selective Forwarding Unit (SFU)** receives media streams from participants
+  and forwards them to others, without decoding or re-encoding. This enables
+  **low latency** and **scalable** real-time communication.
+</Callout>
+
+Waterbus's SFU is the core of its real-time media infrastructure. Built in **Rust**, it is optimized for performance and reliability, supporting modern WebRTC features like **Simulcast**, **Scalable Video Coding (SVC)**, and **bandwidth-aware adaptive forwarding** using **Transport-Wide Congestion Control (TWCC)** and **Receiver Estimated Maximum Bitrate (REMB)**.
+
+---
+
+## Responsibilities
+
+The SFU node is responsible for:
+
+- 📡 **Receiving Peer Connections**  
+  Accepts WebRTC connections, handles ICE, DTLS, and decrypts SRTP streams.
+
+- 🔀 **Media Routing**  
+  Forwards RTP packets to all subscribers of a given track with minimal latency.
+
+- ⚙️ **Adaptive Quality Switching**  
+  Dynamically selects the best quality (Simulcast or SVC layer) for each subscriber based on real-time network feedback using TWCC and REMB.
+
+- 🔁 **Track Replacement**  
+  Seamlessly switches between different video layers or qualities on the fly without interruption.
+
+- 📤 **Egress Forwarding**  
+  Sends selected streams to egress pipelines such as **HLS** or **MoQ** for cloud recording or live broadcast.
+
+- 🧠 **Publisher Feedback for Layer Thinning**  
+  Informs publishers to stop sending unused Simulcast or SVC layers when no subscriber needs them — saving **bandwidth** and **device battery**.
+
+---
+
+## How It Works
+
+Each participant establishes a WebRTC connection with the SFU. The flow is:
+
+1. **Negotiation** of ICE, DTLS, and SRTP.
+2. **Media Reception** of encoded RTP (e.g., VP8, H264 for video; Opus for audio).
+3. **Media Forwarding** to one or more subscribers.
+4. **Bandwidth Monitoring** via TWCC and REMB feedback loops.
+5. **Dynamic Layer Switching** based on real-time network conditions.
+6. **Publisher Coordination** to reduce unnecessary uplink usage.
+
+---
+
+## Simulcast and SVC Handling with TWCC
+
+Waterbus supports:
+
+- **Simulcast**: Multiple streams at different resolutions (e.g., 720p, 480p, 240p).
+- **SVC (Scalable Video Coding)**: A single encoded stream with multiple enhancement layers (temporal, spatial).
+
+Using **TWCC (Transport-Wide Congestion Control)**, the SFU can accurately measure network performance such as packet loss and RTT for each subscriber. This enables:
+
+- Per-subscriber quality adaptation
+- Automatic layer switching (e.g., drop from 720p to 480p under poor conditions)
+- Smart subscription logic to avoid overloading weak connections
+
+---
+
+## Real-world Example: Publisher Sends f, h, q
+
+Let’s say a publisher is sending three Simulcast layers:
+
+- `f` = Full resolution (e.g., 1280x720)
+- `h` = Half resolution (e.g., 640x360)
+- `q` = Quarter resolution (e.g., 320x180)
+
+Initially, all layers are sent to the SFU.
+
+Now, imagine:
+
+- Only one subscriber is watching the stream.
+- That subscriber is on a poor network, and only receives the `q` layer.
+
+### Optimization
+
+- The SFU detects that no subscriber is using the `h` or `f` layers.
+- The SFU sends a **Layer Feedback Message** to the publisher:
+
+  > “Stop sending layer `h` — no one is using it right now.”
+
+- The publisher **pauses** the `h` stream.
+- Result: **Lower CPU**, **less upload bandwidth** on the publisher's device, and **less processing load** on the SFU.
+
+If later another subscriber joins with good network conditions, the SFU will request:
+
+> “Please resume layer `h` — a new viewer needs it.”
+
+This approach enables **real-time resource optimization**, ideal for mobile users and large-scale broadcasts.
+
+---
+
+## Architecture Overview
+
+The SFU node integrates with other components like the **Dispatcher** (for room control) and **Egress Modules** (for output streaming):
+
+- SFU nodes are **stateless** — they don’t store media history.
+- Room state and session assignments are managed by the **Dispatcher** using **etcd**.
+- This design allows **horizontal scaling**, fault tolerance, and fast recovery.

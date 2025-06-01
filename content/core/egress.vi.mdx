@@ -1,0 +1,64 @@
+---
+title: Egress
+---
+
+Waterbus supports two types of media egress: **HLS (HTTP Live Streaming)** and **MoQ (Media over QUIC)**. These allow you to stream WebRTC media out of the SFU to other platforms or protocols, depending on your needs—whether it's scalable streaming over HTTP or ultra-low latency delivery over QUIC.
+
+---
+
+## HLS Egress
+
+HLS egress converts WebRTC media into HLS format, which can be played by standard video players such as Safari, VLC, or hls.js.
+
+### Pipeline
+
+<img src="/images/hls-pipeline.svg" alt="HLS Pipeline" />
+
+### Features
+
+- Supports **Low-Latency HLS (LL-HLS)**.
+- Segments audio/video into `.ts` or `.mp4` and generates `.m3u8` playlists.
+- Handles **Simulcast** and **SVC** for adaptive bitrate streaming.
+- Can upload to cloud storage (e.g., S3, R2).
+- Ideal for traditional live streaming and VOD playback via CDN.
+
+---
+
+## MoQ Egress
+
+MoQ (Media over QUIC) is a new protocol for real-time and scalable media delivery with ultra-low latency.
+
+### Pipeline
+
+<img src="/images/moq-pipeline.svg" alt="HLS Pipeline" />
+
+### Features
+
+- Converts RTP tracks into MoQ-compliant media objects.
+- Organizes streams by namespace, session, and topic.
+- Requires a MoQ-compatible client or relay to subscribe.
+- Optimized for interactive apps, low-latency events, and mesh delivery.
+
+### Use cases
+
+- Real-time collaboration tools.
+- Interactive live events.
+- Federated CDN and mesh delivery systems.
+
+<Callout>
+  MoQ support is experimental. It requires a compatible MoQ client or relay to
+  receive and play media.
+</Callout>
+
+---
+
+## Choosing Between HLS and MoQ
+
+| Feature     | HLS                   | MoQ                          |
+| ----------- | --------------------- | ---------------------------- |
+| Playback    | Works in browsers     | Requires custom client       |
+| Latency     | 2 – 6s (LL-HLS)       | 0.5 - 1s (ultra-low latency) |
+| Scalability | Excellent (CDN ready) | Good with relays/mesh        |
+| Use cases   | Public livestreams    | Real-time apps, low-latency  |
+
+---

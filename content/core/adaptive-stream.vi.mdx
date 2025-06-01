@@ -1,0 +1,33 @@
+---
+title: Luồng Thích Ứng
+description: Tự động điều chỉnh chất lượng video dựa trên kích thước và độ hiển thị để tối ưu hiệu suất và tiết kiệm băng thông.
+---
+
+## Tổng Quan
+
+**Luồng Thích Ứng** là một tối ưu hóa thông minh tự động chọn chất lượng video tốt nhất (độ phân giải) cho từng người đăng ký, dựa trên cách và nơi video được hiển thị — chẳng hạn như **kích thước trên màn hình** và **liệu nó có hiển thị** hay không.
+
+Điều này giúp cung cấp trải nghiệm người dùng tốt trong khi tiết kiệm băng thông, CPU và pin — đặc biệt hữu ích cho các thiết bị di động, các ô video nhỏ hoặc khi video bị thu nhỏ.
+
+## Cách Hoạt Động
+
+Khi một người dùng đăng ký một video, **Luồng Thích Ứng** xem xét:
+
+- **Kích thước** của phần tử video (ví dụ: nhỏ trên di động so với lớn trên máy tính để bàn)
+- Liệu video hiện tại có **hiển thị** hay không (ví dụ: tab ẩn, bị thu nhỏ, hoặc không trong tầm nhìn)
+
+Sau đó, nó tự động chọn **chất lượng video phù hợp nhất** từ các lớp phát sóng đồng thời:
+
+- 📱 Trên **di động**, video có thể được hiển thị trong một ô nhỏ hơn → chỉ cần **độ phân giải một phần tư**
+- 💻 Trên **máy tính để bàn**, video tương tự có thể lớn hơn → có thể chọn **độ phân giải một nửa** hoặc **đầy đủ**
+- 💤 Nếu video **không hiển thị** (ví dụ: tab nền) → video có thể bị tạm dừng hoặc sử dụng độ phân giải thấp nhất
+
+### Ví Dụ
+
+Giả sử một nhà xuất bản đang gửi các lớp phát sóng đồng thời này:
+
+- **f** = Độ phân giải đầy đủ (ví dụ: 720p)
+- **h** = Độ phân giải một nửa (ví dụ: 360p)
+- **q** = Độ phân giải một phần tư (ví dụ: 180p)
+
+Tùy thuộc vào việc đăng ký

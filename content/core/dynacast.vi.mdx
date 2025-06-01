@@ -1,0 +1,56 @@
+---
+title: Dynacast
+description: Dynamically pause video layers that no one is subscribed to — reducing bandwidth usage and saving device power.
+---
+
+## Overview
+
+**Dynacast** is an optimization technique used in video streaming systems (especially SFUs) to improve performance and efficiency. It ensures that only the necessary video layers are encoded and sent when they're actually needed.
+
+## How It Works
+
+When using **simulcast**, a publisher (such as a webcam or screen share) sends multiple versions of the same video stream at different qualities — for example:
+
+- **f** = Full (high) resolution
+- **h** = Half (medium) resolution
+- **q** = Quarter (low) resolution
+
+Each subscriber can choose which quality they want to receive based on their device performance, network conditions, or UI layout.
+
+### Dynacast Behavior
+
+With **Dynacast enabled**:
+
+- If no one is subscribed to a specific layer (e.g. the **f** layer), the publisher **automatically stops encoding and sending** that layer.
+- Only the layers being used by subscribers (**h** and **q**, for example) will be encoded and transmitted.
+- If later a new subscriber wants the **f** layer, the publisher resumes sending it.
+
+### Example
+
+Let’s say:
+
+- The publisher is sending three layers: `f`, `h`, and `q`
+- There are 2 subscribers:
+  - One subscribes to `h`
+  - One subscribes to `q`
+
+In this case:
+
+- The **`f`** (full quality) stream is **not needed**, so it will be **paused**
+- Only **`h`** and **`q`** continue to be sent
+
+> ✅ This means **less CPU usage, less bandwidth**, and **longer battery life** on the publisher's device.
+
+## Benefits
+
+✅ **Saves Bandwidth**  
+Only streams that are actually being watched are transmitted — reducing network load for both client and server.
+
+✅ **Improves Performance**  
+By avoiding unnecessary video encoding, CPU and GPU resources are freed up — leading to smoother performance.
+
+✅ **Extends Battery Life**  
+Especially important for mobile devices and laptops: fewer video encodes = lower power consumption.
+
+✅ **Scales Efficiently**  
+Helps large calls or conferences scale better, since the system isn’t overloaded with unused video layers.

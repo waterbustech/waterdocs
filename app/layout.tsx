@@ -1,10 +1,16 @@
 import './global.css';
 import { RootProvider } from 'fumadocs-ui/provider';
-import { Inter } from 'next/font/google';
+import { IBM_Plex_Mono, Ubuntu } from 'next/font/google';
 import type { ReactNode } from 'react';
 
-const inter = Inter({
+const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
+  weight: '400'
+});
+
+const ubuntu = Ubuntu({
+  subsets: ['latin'],
+  weight: '400',
 });
 
 export const metadata = {
@@ -19,7 +25,7 @@ export const metadata = {
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html lang="en" className={`${ubuntu.className} ${ibmPlexMono.className}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
         <RootProvider theme={{themes: ["cappuccin"]}}>{children}</RootProvider>
       </body>

@@ -1,6 +1,6 @@
 {
   "title": "Core",
-  "description": "The Waterbus Core",
+  "description": "The docs waterbus",
   "icon": "Package",
   "pages": [
     "---Introduction---",
@@ -18,8 +18,6 @@
     "local",
     "k8s",
     "cli",
-    "---Integrate---",
-    "server-sdk",
     "---Explains---",
     "bandwidth-saving",
     "faq",

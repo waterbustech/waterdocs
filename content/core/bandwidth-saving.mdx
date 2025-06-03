@@ -1,5 +1,52 @@
 ---
 title: Bandwidth Saving
+description: How does Waterbus saving the server and client bandwidth usage?
 ---
 
-How does Waterbus saving the server and client bandwidth usage?
+Waterbus is optimized to minimize bandwidth usage for both clients and servers, ensuring scalable and efficient real-time communications. It employs several intelligent techniques to reduce unnecessary data transmission without compromising media quality or user experience.
+
+## 🎙️ Audio DTX (Discontinuous Transmission)
+
+Waterbus enables **DTX** for audio tracks to avoid sending packets during silence. This significantly reduces bandwidth usage in real-world conversations where participants frequently pause between speech.
+
+- **Without DTX**: Audio streams are sent continuously at ~20–40 kbps even during silence.
+- **With DTX**: During silence, bandwidth drops to ~400–800 bps.
+- **Result**: Up to **90–98% bandwidth savings** during silent periods.
+
+This is especially impactful in large meetings where only a few participants are speaking at any given time.
+
+## 📉 Dynacast (Layer Suspension)
+
+Dynacast dynamically pauses **simulcast or SVC video layers** that are not being consumed by any subscribers. If no participant is viewing a specific resolution or quality layer, Waterbus stops forwarding and even stops requesting that stream from the publisher.
+
+- Saves **uplink bandwidth** on the publisher side.
+- Reduces **downlink bandwidth** and **processing load** on receivers.
+- Frees up **server forwarding resources** in the SFU.
+
+This is ideal for meetings with many passive listeners or minimized video tiles.
+
+## 🧠 Adaptive Stream
+
+Waterbus supports **adaptive streaming**, which automatically adjusts video resolution and bitrate based on:
+
+- **View size** (e.g., thumbnail vs full screen)
+- **Visibility** (e.g., hidden or background tabs)
+
+Only the necessary quality level is sent, ensuring:
+
+- Lower bandwidth consumption
+- Improved performance on low-powered or mobile devices
+- Smoother user experience in variable network conditions
+
+## 🔄 Hybrid Topology (P2P + SFU)
+
+Waterbus uses a **hybrid P2P-SFU architecture** to optimize for both performance and scalability:
+
+- **1:1 Calls**: Use **Peer-to-Peer (P2P)** connection to minimize latency and eliminate server load.
+- **Group Calls**: Automatically switch to **SFU mode** when more than two participants join, allowing scalable and efficient media routing.
+
+This ensures that bandwidth is used efficiently in small sessions while retaining the ability to scale to large rooms seamlessly.
+
+---
+
+By combining DTX, Dynacast, Adaptive Streaming, and Hybrid Topology, Waterbus delivers a high-performance media experience while conserving bandwidth and reducing server costs.

@@ -17,13 +17,16 @@ export const source = loader({
         color = "#cba6f7";
         break;
       case "Puzzle":
-        color = "#89b4fa"; 
+        color = "#89b4fa";
         break;
       case "FileCode":
         color = "#a6e3a1";
         break;
+      case "HardDrive":
+        color = "#94e2d5";
+        break;
       default:
-        color = "#bac2de"; // Surface tone (fallback)
+        color = "#bac2de";
     }
 
     return createElement(icons[icon as keyof typeof icons], {

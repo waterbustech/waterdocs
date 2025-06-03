@@ -4,7 +4,7 @@ import { withContentCollections } from "@content-collections/next";
 const config = {
   reactStrictMode: true,
   images: {
-    domains: ["media.waterbus.tech", "i.ibb.co", "github.com"],
+    domains: ["media.waterbus.tech", "github.com"],
   },
   async redirects() {
     return [

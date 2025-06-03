@@ -1,6 +1,6 @@
 {
     "title": "OpenAPI",
-    "description": "Waterbus OpenAPI",
+    "description": "OpenAPI spec for Waterbus",
     "icon": "FileCode",
     "root": true
 }

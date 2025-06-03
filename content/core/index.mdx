@@ -2,9 +2,9 @@
 title: Overview
 ---
 
-import { Package, Puzzle, FileCode } from "lucide-react";
+import { Package, Puzzle, FileCode, HardDrive } from "lucide-react";
 
-## Introduction
+## What is Waterbus?
 
 **Waterbus** is a modern, high-performance **media server** and **real-time infrastructure** designed for the next generation of interactive applications. Built in Rust, it supports **WebRTC**, **Simulcast**, **SVC**, and egress to **HLS**, **LL-HLS**, and **MoQ** — optimized for low latency, scalability, and cost-efficiency.
 
@@ -15,13 +15,28 @@ Waterbus automatically handles peer-to-peer connections for up to 2 participants
     The foundation of Waterbus: a high-performance SFU built in Rust with
     support for WebRTC, simulcast, SVC, and more.
   </Card>
-  <Card icon={<Puzzle color="#89b4fa" />} href="/flutter-sdk" title="Flutter SDK">
+  <Card
+    icon={<Puzzle color="#89b4fa" />}
+    href="/flutter-sdk"
+    title="Flutter SDK"
+  >
     Easily integrate Waterbus into your Flutter apps with our lightweight,
     real-time communication SDK.
   </Card>
-  <Card icon={<FileCode color="#a6e3a1" />} href="/openapi/auth/post" title="Open API">
+  <Card
+    icon={<FileCode color="#a6e3a1" />}
+    href="/zopenapi/auth/post"
+    title="Open API"
+  >
     Explore our OpenAPI spec to build your own integrations or extend Waterbus
     functionality seamlessly.
+  </Card>
+  <Card
+    icon={<HardDrive color="#94e2d5" />}
+    href="/server-sdk/usage"
+    title="Server SDK"
+  >
+    Build backend integrations with full control using the Waterbus Server SDK.
   </Card>
 </Cards>
 
@@ -44,36 +59,36 @@ Whether it's a video meeting, livestream, or classroom — Waterbus adapts intel
 
 ### 🧑‍💼 Low-Latency Meetings
 
-- Perfect for video conferencing, daily standups, or collaborative sessions.  
-- Waterbus starts with **peer-to-peer (P2P)** when there are two participants for ultra-low latency.  
-- As soon as a third participant joins, the session **automatically upgrades to SFU mode**, optimizing media forwarding and reducing bandwidth usage on clients.  
+- Perfect for video conferencing, daily standups, or collaborative sessions.
+- Waterbus starts with **peer-to-peer (P2P)** when there are two participants for ultra-low latency.
+- As soon as a third participant joins, the session **automatically upgrades to SFU mode**, optimizing media forwarding and reducing bandwidth usage on clients.
 - With **REMB** and **TWCC** support, Waterbus adapts stream quality in real-time to match network conditions — ensuring smooth and stable experiences across devices.
 
 ### 🎙️ AMA-Style Broadcasts
 
-- Great for interactive Q&A sessions, online panels, or webinars where a few participants speak and many listen.  
-- Using **MoQ (Media over QUIC)**, Waterbus allows scalable, low-latency media delivery with selective forwarding.  
-- Speakers are forwarded efficiently to large audiences, while listeners benefit from fast startup time and minimal delay.  
+- Great for interactive Q&A sessions, online panels, or webinars where a few participants speak and many listen.
+- Using **MoQ (Media over QUIC)**, Waterbus allows scalable, low-latency media delivery with selective forwarding.
+- Speakers are forwarded efficiently to large audiences, while listeners benefit from fast startup time and minimal delay.
 - MoQ also helps reduce server load and egress costs by leveraging shared delivery paths.
 
 ### 📺 Traditional Live Streaming
 
-- Use Waterbus to stream to a wide audience with **HLS** or **Low-Latency HLS (LL-HLS)**.  
-- This is ideal for concerts, townhalls, sports events, or any broadcast-style content where compatibility and reach are critical.  
-- Streams can be recorded, restreamed, or distributed via CDN — giving you flexibility in how you scale and deliver your content.  
+- Use Waterbus to stream to a wide audience with **HLS** or **Low-Latency HLS (LL-HLS)**.
+- This is ideal for concerts, townhalls, sports events, or any broadcast-style content where compatibility and reach are critical.
+- Streams can be recorded, restreamed, or distributed via CDN — giving you flexibility in how you scale and deliver your content.
 - Waterbus provides modular output writers like `HlsWriter` that allow easy integration with cloud storage or CDN workflows.
 
 ---
 
 ## Features Overview
 
-- 🦀 **Rust Core** — High performance, memory safety, low-level control  
-- 🔄 **P2P + SFU** — Automatically migrate from P2P to SFU at 3+ participants  
-- 📡 **WebRTC SFU** — Supports Simulcast, SVC, TWCC, and REMB  
-- 📤 **Egress** — Modular output via HLS, LL-HLS, and MoQ  
-- ☸️ **Distributed Architecture** — Etcd-based service discovery and room routing  
-- 📱 **SDKs** — Flutter SDK available, Server SDK coming soon  
-- 🧪 **CLI Tooling** — Developer utilities for testing and automation  
+- 🦀 **Rust Core** — High performance, memory safety, low-level control
+- 🔄 **P2P + SFU** — Automatically migrate from P2P to SFU at 3+ participants
+- 📡 **WebRTC SFU** — Supports Simulcast, SVC, TWCC, and REMB
+- 📤 **Egress** — Modular output via HLS, LL-HLS, and MoQ
+- ☸️ **Distributed Architecture** — Etcd-based service discovery and room routing
+- 📱 **SDKs** — Flutter SDK available, Server SDK coming soon
+- 🧪 **CLI Tooling** — Developer utilities for testing and automation
 
 ---
 
@@ -89,7 +104,8 @@ Each SFU Node is responsible for:
 - Streaming to external outputs (HLS, MoQ)
 
 <Callout title="Info">
-In production deployments, Waterbus runs as distributed services over QUIC/gRPC with etcd for coordination.
+  In production deployments, Waterbus runs as distributed services over
+  QUIC/gRPC with etcd for coordination.
 </Callout>
 
 ---
@@ -99,6 +115,7 @@ In production deployments, Waterbus runs as distributed services over QUIC/gRPC 
 Waterbus is built for developers who care about **performance**, **control**, and **user experience**. Whether you're prototyping a new idea or scaling a global platform, Waterbus is the media infrastructure that works with you.
 
 → Get started with:
+
 - 🧑‍💻 [Quickstart Guide](/core/local)
 - 📱 [Using the Flutter SDK](/flutter-sdk)
 

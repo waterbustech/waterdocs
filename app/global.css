@@ -8,11 +8,55 @@
     background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1), transparent 70%);
   }
 
-  .fill-primary path {
+.fill-primary path {
     fill: #cba6f7;
-  }
+}
 
-  .blur-background {
+.blur-background {
     filter: blur(40px);
     opacity: 0.3;
-  }
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
+
+p {
+  font-weight: 400;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+li {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+h1, h2, button, .font-medium {
+  font-family: 'IBM Plex Mono' !important;
+}
+
+a {
+  font-family: 'IBM Plex Mono' !important;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #cba6f7;
+}
+
+::selection {
+  background: transparent;
+  color: #94e2d5;
+}

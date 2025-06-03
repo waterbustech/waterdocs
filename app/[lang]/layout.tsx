@@ -43,18 +43,18 @@ export default async function Layout({
                 locale: "en",
               },
               {
-                name: "Vietnamese",
+                name: "Tiếng Việt",
                 locale: "vi",
               },
             ],
             translations: {
               vi: {
-                toc: "目錄",
-                search: "搜尋文檔",
-                lastUpdate: "最後更新於",
-                searchNoResult: "沒有結果",
-                previousPage: "上一頁",
-                nextPage: "下一頁",
+                toc: "Mục lục",
+                search: "Tìm kiếm",
+                lastUpdate: "Cập nhật lần cuối",
+                searchNoResult: "Không tìm thấy kết quả",
+                previousPage: "Trang trước",
+                nextPage: "Trang sau",
                 chooseLanguage: "Chọn ngôn ngữ",
               },
             }

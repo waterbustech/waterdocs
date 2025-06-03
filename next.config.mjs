@@ -10,7 +10,7 @@ const config = {
     return [
       {
         source: "/",
-        destination: "/core",
+        destination: "/en/core",
        permanent: true,
       },
     ];

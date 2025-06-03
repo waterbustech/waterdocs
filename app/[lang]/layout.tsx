@@ -1,4 +1,4 @@
-import "./global.css";
+import "../global.css";
 import { RootProvider } from "fumadocs-ui/provider";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
@@ -11,9 +11,9 @@ export const metadata = {
   title: "Waterdocs",
   description: "Documentation for Waterbus SFU.",
   icons: {
-    icon: "/[lang]/favicon.ico",
-    shortcut: "/[lang]/favicon.ico",
-    apple: "/[lang]/apple-touch-icon.png",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
 };
 

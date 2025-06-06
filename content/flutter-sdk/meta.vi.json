@@ -1,0 +1,21 @@
+{
+    "title": "Flutter SDK",
+    "description": "Integrate into Flutter",
+    "icon": "Puzzle",
+    "pages": [
+      "---Installation---",
+      "index",
+      "---Usages---",
+      "usage",
+      "---Advanced---",
+      "picture-in-picture",
+      "virtual-background",
+      "screen-sharing",
+      "beauty-filters",
+      "---Other Plugins---",
+      "moq-client",
+      "hls-player",
+      "[flutter-webrtc-plus](https://pub.dev/packages/flutter_webrtc_plus)"
+    ],
+    "root": true
+  }

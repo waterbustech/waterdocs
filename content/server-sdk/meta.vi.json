@@ -1,0 +1,10 @@
+{
+  "title": "Server SDK",
+  "description": "Integrate into your backend",
+  "icon": "HardDrive",
+  "pages": [
+    "installation",
+    "usage"
+  ],
+  "root": true
+}

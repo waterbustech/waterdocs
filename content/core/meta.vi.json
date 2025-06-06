@@ -3,7 +3,7 @@
   "description": "The Waterbus Core",
   "icon": "Package",
   "pages": [
-    "---Introduction---",
+    "---Giới thiệu---",
     "index",
     "concept",
     "architecture",
@@ -18,8 +18,6 @@
     "local",
     "k8s",
     "cli",
-    "---Integrate---",
-    "server-sdk",
     "---Explains---",
     "bandwidth-saving",
     "faq",

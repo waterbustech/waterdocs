@@ -4,105 +4,105 @@ title: SFU
 
 import { SatelliteDish, Video } from "lucide-react";
 
-<Callout title="What is an SFU?" icon={<SatelliteDish />}>
-  A **Selective Forwarding Unit (SFU)** receives media streams from participants
-  and forwards them to others, without decoding or re-encoding. This enables
-  **low latency** and **scalable** real-time communication.
+<Callout title="SFU là gì?" icon={<SatelliteDish />}>
+  **Selective Forwarding Unit (SFU)** nhận các luồng media từ người tham gia
+  và chuyển tiếp chúng đến những người khác mà không giải mã hay mã hóa lại. 
+  Điều này giúp đạt được **độ trễ thấp** và **khả năng mở rộng** trong truyền thông thời gian thực.
 </Callout>
 
-Waterbus's SFU is the core of its real-time media infrastructure. Built in **Rust**, it is optimized for performance and reliability, supporting modern WebRTC features like **Simulcast**, **Scalable Video Coding (SVC)**, and **bandwidth-aware adaptive forwarding** using **Transport-Wide Congestion Control (TWCC)** and **Receiver Estimated Maximum Bitrate (REMB)**.
+SFU của Waterbus là trung tâm của hạ tầng media thời gian thực. Được xây dựng bằng **Rust**, nó được tối ưu về hiệu suất và độ tin cậy, hỗ trợ các tính năng WebRTC hiện đại như **Simulcast**, **Scalable Video Coding (SVC)** và chuyển tiếp thích ứng dựa trên băng thông với **Transport-Wide Congestion Control (TWCC)** và **Receiver Estimated Maximum Bitrate (REMB)**.
 
 ---
 
-## Responsibilities
+## Trách nhiệm
 
-The SFU node is responsible for:
+Node SFU chịu trách nhiệm:
 
-- 📡 **Receiving Peer Connections**  
-  Accepts WebRTC connections, handles ICE, DTLS, and decrypts SRTP streams.
+- 📡 **Nhận kết nối Peer**  
+  Chấp nhận kết nối WebRTC, xử lý ICE, DTLS và giải mã các luồng SRTP.
 
-- 🔀 **Media Routing**  
-  Forwards RTP packets to all subscribers of a given track with minimal latency.
+- 🔀 **Định tuyến media**  
+  Chuyển tiếp các gói RTP đến tất cả các subscriber của một track với độ trễ tối thiểu.
 
-- ⚙️ **Adaptive Quality Switching**  
-  Dynamically selects the best quality (Simulcast or SVC layer) for each subscriber based on real-time network feedback using TWCC and REMB.
+- ⚙️ **Chuyển đổi chất lượng thích ứng**  
+  Tự động chọn chất lượng tốt nhất (lớp Simulcast hoặc SVC) cho từng subscriber dựa trên phản hồi mạng thời gian thực từ TWCC và REMB.
 
-- 🔁 **Track Replacement**  
-  Seamlessly switches between different video layers or qualities on the fly without interruption.
+- 🔁 **Thay thế track**  
+  Chuyển đổi mượt mà giữa các lớp video hoặc chất lượng khác nhau mà không gây gián đoạn.
 
-- 📤 **Egress Forwarding**  
-  Sends selected streams to egress pipelines such as **HLS** or **MoQ** for cloud recording or live broadcast.
+- 📤 **Chuyển tiếp Egress**  
+  Gửi các luồng đã chọn đến pipeline egress như **HLS** hoặc **MoQ** để ghi lại đám mây hoặc phát sóng trực tiếp.
 
-- 🧠 **Publisher Feedback for Layer Thinning**  
-  Informs publishers to stop sending unused Simulcast or SVC layers when no subscriber needs them — saving **bandwidth** and **device battery**.
-
----
-
-## How It Works
-
-Each participant establishes a WebRTC connection with the SFU. The flow is:
-
-1. **Negotiation** of ICE, DTLS, and SRTP.
-2. **Media Reception** of encoded RTP (e.g., VP8, H264 for video; Opus for audio).
-3. **Media Forwarding** to one or more subscribers.
-4. **Bandwidth Monitoring** via TWCC and REMB feedback loops.
-5. **Dynamic Layer Switching** based on real-time network conditions.
-6. **Publisher Coordination** to reduce unnecessary uplink usage.
+- 🧠 **Phản hồi từ publisher về lớp video không dùng**  
+  Thông báo cho publisher ngừng gửi các lớp Simulcast hoặc SVC không có subscriber dùng — tiết kiệm **băng thông** và **pin thiết bị**.
 
 ---
 
-## Simulcast and SVC Handling with TWCC
+## Cách hoạt động
 
-Waterbus supports:
+Mỗi người tham gia thiết lập kết nối WebRTC với SFU. Luồng hoạt động:
 
-- **Simulcast**: Multiple streams at different resolutions (e.g., 720p, 480p, 240p).
-- **SVC (Scalable Video Coding)**: A single encoded stream with multiple enhancement layers (temporal, spatial).
-
-Using **TWCC (Transport-Wide Congestion Control)**, the SFU can accurately measure network performance such as packet loss and RTT for each subscriber. This enables:
-
-- Per-subscriber quality adaptation
-- Automatic layer switching (e.g., drop from 720p to 480p under poor conditions)
-- Smart subscription logic to avoid overloading weak connections
+1. **Đàm phán** ICE, DTLS, và SRTP.
+2. **Nhận media** các gói RTP đã mã hóa (ví dụ VP8, H264 cho video; Opus cho audio).
+3. **Chuyển tiếp media** đến một hoặc nhiều subscriber.
+4. **Giám sát băng thông** qua các vòng phản hồi TWCC và REMB.
+5. **Chuyển đổi lớp động** dựa trên điều kiện mạng thời gian thực.
+6. **Phối hợp với publisher** để giảm sử dụng uplink không cần thiết.
 
 ---
 
-## Real-world Example: Publisher Sends f, h, q
+## Hỗ trợ Simulcast và SVC với TWCC
 
-Let’s say a publisher is sending three Simulcast layers:
+Waterbus hỗ trợ:
 
-- `f` = Full resolution (e.g., 1280x720)
-- `h` = Half resolution (e.g., 640x360)
-- `q` = Quarter resolution (e.g., 320x180)
+- **Simulcast**: Nhiều luồng video với các độ phân giải khác nhau (ví dụ 720p, 480p, 240p).
+- **SVC (Scalable Video Coding)**: Một luồng mã hóa với nhiều lớp nâng cao (theo thời gian, không gian).
 
-Initially, all layers are sent to the SFU.
+Nhờ **TWCC (Transport-Wide Congestion Control)**, SFU đo chính xác hiệu suất mạng như mất gói dữ liệu và RTT cho từng subscriber. Điều này cho phép:
 
-Now, imagine:
-
-- Only one subscriber is watching the stream.
-- That subscriber is on a poor network, and only receives the `q` layer.
-
-### Optimization
-
-- The SFU detects that no subscriber is using the `h` or `f` layers.
-- The SFU sends a **Layer Feedback Message** to the publisher:
-
-  > “Stop sending layer `h` — no one is using it right now.”
-
-- The publisher **pauses** the `h` stream.
-- Result: **Lower CPU**, **less upload bandwidth** on the publisher's device, and **less processing load** on the SFU.
-
-If later another subscriber joins with good network conditions, the SFU will request:
-
-> “Please resume layer `h` — a new viewer needs it.”
-
-This approach enables **real-time resource optimization**, ideal for mobile users and large-scale broadcasts.
+- Điều chỉnh chất lượng theo từng subscriber.
+- Tự động chuyển đổi lớp (ví dụ từ 720p xuống 480p khi mạng yếu).
+- Logic đăng ký thông minh để tránh quá tải kết nối yếu.
 
 ---
 
-## Architecture Overview
+## Ví dụ thực tế: Publisher gửi các lớp f, h, q
 
-The SFU node integrates with other components like the **Dispatcher** (for room control) and **Egress Modules** (for output streaming):
+Giả sử publisher gửi 3 lớp Simulcast:
 
-- SFU nodes are **stateless** — they don’t store media history.
-- Room state and session assignments are managed by the **Dispatcher** using **etcd**.
-- This design allows **horizontal scaling**, fault tolerance, and fast recovery.
+- `f` = Độ phân giải đầy đủ (ví dụ 1280x720)
+- `h` = Độ phân giải một nửa (ví dụ 640x360)
+- `q` = Độ phân giải một phần tư (ví dụ 320x180)
+
+Ban đầu, tất cả các layer được gửi đến SFU.
+
+Bây giờ, giả sử:
+
+- Chỉ có một subscriber đang xem.
+- Subscriber này mạng kém và chỉ nhận layer `q`.
+
+### Tối ưu hóa
+
+- SFU phát hiện không có subscriber nào dùng layer `h` hoặc `f`.
+- SFU gửi **Thông báo phản hồi layer (Layer Feedback Message)** đến publisher:
+
+  > “Dừng gửi layer `h` — hiện tại không ai sử dụng.”
+
+- Publisher **tạm dừng** layer `h`.
+- Kết quả: **CPU giảm tải**, **băng thông upload giảm** trên thiết bị publisher và **giảm tải xử lý** cho SFU.
+
+Nếu sau đó có subscriber mới với mạng tốt tham gia, SFU sẽ yêu cầu:
+
+> “Vui lòng tiếp tục gửi layer `h` — có người xem cần.”
+
+Cách tiếp cận này giúp **tối ưu tài nguyên thời gian thực**, rất phù hợp cho người dùng di động và phát sóng quy mô lớn.
+
+---
+
+## Tổng quan kiến trúc
+
+Node SFU tích hợp với các thành phần khác như **Dispatcher** (quản lý phòng) và **Egress Modules** (xuất luồng):
+
+- Node SFU là **stateless** — không lưu trữ lịch sử media.
+- Trạng thái phòng và phân bổ phiên được **Dispatcher** quản lý qua **etcd**.
+- Thiết kế này cho phép **mở rộng ngang**, khả năng chịu lỗi và phục hồi nhanh.

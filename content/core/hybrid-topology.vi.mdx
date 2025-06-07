@@ -1,49 +1,50 @@
 ---
 title: Hybrid Topology
-description: Start with peer-to-peer (P2P) for one-on-one calls, and automatically switch to an SFU (Selective Forwarding Unit) when more participants join.
+description: Bắt đầu với kết nối peer-to-peer (P2P) cho cuộc gọi 1:1, và tự động chuyển sang SFU (Selective Forwarding Unit) khi có thêm người tham gia.
 ---
 
-## Overview
+## Tổng quan
 
 <img src="/images/migrate-sfu.svg" width="100%" />
 
-## How It Works
+## Cách hoạt động
 
-The **Hybrid Topology** combines the strengths of Peer-to-Peer (P2P) and Selective Forwarding Unit (SFU) architectures to optimize media transmission based on the number of participants:
+**Hybrid Topology** kết hợp điểm mạnh của kiến trúc **Peer-to-Peer (P2P)** và **Selective Forwarding Unit (SFU)** để tối ưu việc truyền tải media tùy theo số lượng người tham gia:
 
-1. **One-on-One Calls (P2P Mode):**
+1. **Cuộc gọi 1:1 (Chế độ P2P):**
 
-   - When a call starts with just two participants, media streams are sent directly between them using a **Peer-to-Peer** connection.
-   - This minimizes latency and reduces server load, as media doesn’t pass through a central server.
+   - Khi cuộc gọi bắt đầu với chỉ hai người, media được truyền trực tiếp giữa hai thiết bị bằng kết nối **Peer-to-Peer**.
+   - Điều này giúp giảm độ trễ và giảm tải cho server, vì media không đi qua máy chủ trung tâm.
 
-2. **Adding a Third Participant (Migration to SFU):**
+2. **Thêm người thứ ba (Chuyển sang SFU):**
 
-   - When a third person joins the call, the system automatically transitions to **SFU mode**.
-   - All participants send their media streams to the SFU server, which then forwards the streams to everyone else.
-   - The migration is seamless — users won’t need to restart the call.
+   - Khi người thứ ba tham gia, hệ thống sẽ tự động chuyển sang chế độ **SFU**.
+   - Tất cả người dùng sẽ gửi media lên server SFU, và SFU sẽ forward media đến các người tham gia khác.
+   - Việc chuyển đổi này diễn ra liền mạch — người dùng không cần phải khởi động lại cuộc gọi.
 
-3. **Dynamic Room Management:**
-   - The backend keeps track of participant counts and manages the transition logic.
-   - Rooms are upgraded from P2P to SFU in real time based on a predefined threshold (typically >2 users).
+3. **Quản lý phòng động:**
 
-## Pros of Hybrid Topology
+   - Backend theo dõi số lượng người tham gia và điều khiển logic chuyển đổi.
+   - Các phòng sẽ được nâng cấp từ P2P sang SFU theo thời gian thực dựa trên ngưỡng định sẵn (thường là >2 người dùng).
 
-✅ **Optimized for Performance**
+## Ưu điểm của Hybrid Topology
 
-- P2P is ideal for 1-on-1 calls: low latency, low server cost.
-- SFU scales well for group calls: offloads processing from clients.
+✅ **Tối ưu hiệu năng**
 
-✅ **Cost-Effective**
+- P2P rất lý tưởng cho cuộc gọi 1:1: độ trễ thấp, chi phí server thấp.
+- SFU mở rộng tốt cho cuộc gọi nhóm: giảm tải xử lý cho client.
 
-- Media is sent directly between users when possible, reducing bandwidth and server usage.
-- SFU is only used when necessary, minimizing infrastructure costs.
+✅ **Tiết kiệm chi phí**
 
-✅ **Seamless User Experience**
+- Media được gửi trực tiếp giữa người dùng khi có thể, giúp giảm băng thông và tải server.
+- Chỉ sử dụng SFU khi cần thiết, giảm chi phí hạ tầng tổng thể.
 
-- Transitioning from P2P to SFU is automatic and invisible to end users.
-- No need to rejoin the room or refresh the session.
+✅ **Trải nghiệm người dùng liền mạch**
 
-✅ **Scalable Design**
+- Việc chuyển từ P2P sang SFU hoàn toàn tự động và không làm gián đoạn người dùng.
+- Không cần rời phòng hoặc tải lại phiên làm việc.
 
-- Suitable for a wide range of use cases — from private 1:1 chats to larger group meetings.
-- Future-proof for features like recording, streaming, or media analytics via the SFU.
+✅ **Thiết kế dễ mở rộng**
+
+- Phù hợp với nhiều tình huống sử dụng — từ chat riêng tư 1:1 đến các cuộc họp nhóm lớn.
+- Sẵn sàng cho các tính năng tương lai như ghi hình, phát trực tuyến, hoặc phân tích media thông qua SFU.

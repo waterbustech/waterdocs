@@ -1,33 +1,53 @@
 ---
-title: Luồng Thích Ứng
-description: Tự động điều chỉnh chất lượng video dựa trên kích thước và độ hiển thị để tối ưu hiệu suất và tiết kiệm băng thông.
+title: Adaptive Stream
+description: Tự động điều chỉnh chất lượng video dựa trên kích thước hiển thị và khả năng hiển thị để tối ưu hiệu suất và tiết kiệm băng thông.
 ---
 
-## Tổng Quan
+## Tổng quan
 
-**Luồng Thích Ứng** là một tối ưu hóa thông minh tự động chọn chất lượng video tốt nhất (độ phân giải) cho từng người đăng ký, dựa trên cách và nơi video được hiển thị — chẳng hạn như **kích thước trên màn hình** và **liệu nó có hiển thị** hay không.
+**Adaptive Stream** là một tối ưu hóa thông minh giúp tự động chọn chất lượng video (độ phân giải) phù hợp nhất cho từng người xem, dựa trên cách và vị trí mà video được hiển thị — như **kích thước hiển thị trên màn hình** và **việc video có đang được hiển thị hay không**.
 
-Điều này giúp cung cấp trải nghiệm người dùng tốt trong khi tiết kiệm băng thông, CPU và pin — đặc biệt hữu ích cho các thiết bị di động, các ô video nhỏ hoặc khi video bị thu nhỏ.
+Điều này giúp mang lại trải nghiệm người dùng tốt hơn đồng thời tiết kiệm băng thông, CPU và pin — đặc biệt hữu ích trên thiết bị di động, ô video nhỏ, hoặc khi video bị thu nhỏ.
 
-## Cách Hoạt Động
+## Cách hoạt động
 
-Khi một người dùng đăng ký một video, **Luồng Thích Ứng** xem xét:
+Khi người dùng đăng ký (subscribe) một video track, **Adaptive Stream** sẽ xem xét:
 
-- **Kích thước** của phần tử video (ví dụ: nhỏ trên di động so với lớn trên máy tính để bàn)
-- Liệu video hiện tại có **hiển thị** hay không (ví dụ: tab ẩn, bị thu nhỏ, hoặc không trong tầm nhìn)
+- **Kích thước** của phần tử video (ví dụ: nhỏ trên di động vs. lớn trên desktop)
+- Liệu video hiện tại có đang **hiển thị** hay không (ví dụ: tab ẩn, thu nhỏ, hoặc không nằm trong vùng nhìn thấy)
 
-Sau đó, nó tự động chọn **chất lượng video phù hợp nhất** từ các lớp phát sóng đồng thời:
+Sau đó, nó tự động chọn **chất lượng video phù hợp nhất** từ các lớp simulcast:
 
-- 📱 Trên **di động**, video có thể được hiển thị trong một ô nhỏ hơn → chỉ cần **độ phân giải một phần tư**
-- 💻 Trên **máy tính để bàn**, video tương tự có thể lớn hơn → có thể chọn **độ phân giải một nửa** hoặc **đầy đủ**
-- 💤 Nếu video **không hiển thị** (ví dụ: tab nền) → video có thể bị tạm dừng hoặc sử dụng độ phân giải thấp nhất
+- 📱 Trên **di động**, video có thể hiển thị trong ô nhỏ → chỉ cần độ phân giải **quarter**
+- 💻 Trên **desktop**, cùng video có thể hiển thị lớn hơn → chọn **half** hoặc **full resolution**
+- 💤 Nếu video **không hiển thị** (ví dụ: tab chạy nền) → có thể tạm dừng hoặc dùng độ phân giải thấp nhất
 
-### Ví Dụ
+### Ví dụ
 
-Giả sử một nhà xuất bản đang gửi các lớp phát sóng đồng thời này:
+Giả sử publisher đang gửi các lớp simulcast sau:
 
-- **f** = Độ phân giải đầy đủ (ví dụ: 720p)
-- **h** = Độ phân giải một nửa (ví dụ: 360p)
-- **q** = Độ phân giải một phần tư (ví dụ: 180p)
+- **f** = Full resolution (ví dụ: 720p)
+- **h** = Half resolution (ví dụ: 360p)
+- **q** = Quarter resolution (ví dụ: 180p)
 
-Tùy thuộc vào việc đăng ký
+Tùy theo chế độ hiển thị video của người xem:
+
+- **Hiển thị nhỏ** trên di động → đăng ký lớp **q**
+- **Hiển thị trung bình** trong sidebar → đăng ký lớp **h**
+- **Hiển thị lớn** (ví dụ: người nói chính ở chế độ toàn màn hình) → đăng ký lớp **f**
+
+Việc điều chỉnh này là **tự động** và diễn ra theo thời gian thực khi người dùng thay đổi kích thước cửa sổ hoặc chuyển đổi bố cục.
+
+## Lợi ích
+
+✅ **Tối ưu sử dụng băng thông**  
+Chỉ gửi chất lượng video cần thiết — giúp tiết kiệm dữ liệu cho cả client và server.
+
+✅ **Cải thiện hiệu suất thiết bị**  
+Độ phân giải thấp hơn đồng nghĩa với việc thiết bị phải xử lý ít hơn, đặc biệt trên phần cứng yếu hoặc thiết bị di động.
+
+✅ **Trải nghiệm người dùng tốt hơn**  
+Người dùng có video mượt mà, phù hợp với ngữ cảnh — không lãng phí tài nguyên cho video độ phân giải cao trong khung hình nhỏ.
+
+✅ **Phản ứng linh hoạt và động**  
+Tự động phản hồi với các thay đổi giao diện như thay đổi kích thước cửa sổ, chuyển người nói, hoặc vào chế độ picture-in-picture.

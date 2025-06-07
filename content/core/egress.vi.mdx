@@ -2,63 +2,62 @@
 title: Egress
 ---
 
-Waterbus supports two types of media egress: **HLS (HTTP Live Streaming)** and **MoQ (Media over QUIC)**. These allow you to stream WebRTC media out of the SFU to other platforms or protocols, depending on your needs—whether it's scalable streaming over HTTP or ultra-low latency delivery over QUIC.
+Waterbus hỗ trợ hai loại media egress: **HLS (HTTP Live Streaming)** và **MoQ (Media over QUIC)**. Các phương thức này cho phép bạn phát media từ WebRTC ra khỏi SFU sang các nền tảng hoặc giao thức khác, tùy theo nhu cầu — dù là phát trực tuyến quy mô lớn qua HTTP hay truyền tải độ trễ cực thấp qua QUIC.
 
 ---
 
 ## HLS Egress
 
-HLS egress converts WebRTC media into HLS format, which can be played by standard video players such as Safari, VLC, or hls.js.
+HLS egress chuyển đổi media từ WebRTC sang định dạng HLS, có thể phát được bằng các trình phát video tiêu chuẩn như Safari, VLC, hoặc hls.js.
 
 ### Pipeline
 
 <img src="/images/hls-pipeline.svg" alt="HLS Pipeline" />
 
-### Features
+### Tính năng
 
-- Supports **Low-Latency HLS (LL-HLS)**.
-- Segments audio/video into `.ts` or `.mp4` and generates `.m3u8` playlists.
-- Handles **Simulcast** and **SVC** for adaptive bitrate streaming.
-- Can upload to cloud storage (e.g., S3, R2).
-- Ideal for traditional live streaming and VOD playback via CDN.
+- Hỗ trợ **Low-Latency HLS (LL-HLS)**.
+- Phân đoạn audio/video thành `.ts` hoặc `.mp4` và tạo playlist `.m3u8`.
+- Xử lý **Simulcast** và **SVC** để truyền phát bitrate thích ứng (adaptive bitrate).
+- Có thể tải lên lưu trữ đám mây (ví dụ: S3, R2).
+- Phù hợp cho phát trực tuyến truyền thống và phát lại VOD qua CDN.
 
 ---
 
 ## MoQ Egress
 
-MoQ (Media over QUIC) is a new protocol for real-time and scalable media delivery with ultra-low latency.
+**MoQ (Media over QUIC)** là giao thức mới dành cho truyền tải media thời gian thực, có khả năng mở rộng và độ trễ cực thấp.
 
 ### Pipeline
 
-<img src="/images/moq-pipeline.svg" alt="HLS Pipeline" />
+<img src="/images/moq-pipeline.svg" alt="MoQ Pipeline" />
 
-### Features
+### Tính năng
 
-- Converts RTP tracks into MoQ-compliant media objects.
-- Organizes streams by namespace, session, and topic.
-- Requires a MoQ-compatible client or relay to subscribe.
-- Optimized for interactive apps, low-latency events, and mesh delivery.
+- Chuyển đổi các track RTP thành các media object tuân thủ chuẩn MoQ.
+- Tổ chức stream theo namespace, session, và topic.
+- Yêu cầu client hoặc relay tương thích với MoQ để subscribe và nhận media.
+- Tối ưu cho ứng dụng tương tác, sự kiện độ trễ thấp, và hệ thống phân phối dạng mesh.
 
-### Use cases
+### Trường hợp sử dụng
 
-- Real-time collaboration tools.
-- Interactive live events.
-- Federated CDN and mesh delivery systems.
+- Công cụ cộng tác thời gian thực.
+- Sự kiện phát trực tiếp có tính tương tác.
+- CDN liên kết (federated CDN) và hệ thống mesh delivery.
 
 <Callout>
-  MoQ support is experimental. It requires a compatible MoQ client or relay to
-  receive and play media.
+  Hỗ trợ MoQ hiện đang ở trạng thái thử nghiệm. Cần có client hoặc relay tương thích với MoQ để nhận và phát media.
 </Callout>
 
 ---
 
-## Choosing Between HLS and MoQ
+## Lựa chọn giữa HLS và MoQ
 
-| Feature     | HLS                   | MoQ                          |
-| ----------- | --------------------- | ---------------------------- |
-| Playback    | Works in browsers     | Requires custom client       |
-| Latency     | 2 – 6s (LL-HLS)       | 0.5 - 1s (ultra-low latency) |
-| Scalability | Excellent (CDN ready) | Good with relays/mesh        |
-| Use cases   | Public livestreams    | Real-time apps, low-latency  |
+| Tính năng   | HLS                   | MoQ                          |
+|------------|------------------------|------------------------------|
+| Playback    | Hỗ trợ trên trình duyệt | Cần client tùy chỉnh         |
+| Độ trễ      | 2 – 6 giây (LL-HLS)     | 0.5 – 1 giây (rất thấp)       |
+| Khả năng mở rộng | Rất tốt (tích hợp CDN) | Tốt với relay/mesh            |
+| Trường hợp dùng | Livestream công khai     | Ứng dụng thời gian thực, độ trễ thấp |
 
 ---

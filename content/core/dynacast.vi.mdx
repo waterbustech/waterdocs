@@ -1,56 +1,56 @@
 ---
 title: Dynacast
-description: Dynamically pause video layers that no one is subscribed to — reducing bandwidth usage and saving device power.
+description: Tạm dừng động các lớp video không có người xem — giúp giảm băng thông và tiết kiệm năng lượng thiết bị.
 ---
 
-## Overview
+## Tổng quan
 
-**Dynacast** is an optimization technique used in video streaming systems (especially SFUs) to improve performance and efficiency. It ensures that only the necessary video layers are encoded and sent when they're actually needed.
+**Dynacast** là một kỹ thuật tối ưu hóa được sử dụng trong các hệ thống truyền phát video (đặc biệt là trong SFU) nhằm cải thiện hiệu năng và hiệu quả truyền dữ liệu. Dynacast đảm bảo rằng chỉ các lớp video thực sự cần thiết mới được encode và gửi đi.
 
-## How It Works
+## Cách hoạt động
 
-When using **simulcast**, a publisher (such as a webcam or screen share) sends multiple versions of the same video stream at different qualities — for example:
+Khi sử dụng **simulcast**, publisher (ví dụ: webcam hoặc chia sẻ màn hình) sẽ gửi nhiều phiên bản của cùng một video ở các chất lượng khác nhau — ví dụ:
 
-- **f** = Full (high) resolution
-- **h** = Half (medium) resolution
-- **q** = Quarter (low) resolution
+- **f** = Full (độ phân giải cao)
+- **h** = Half (độ phân giải trung bình)
+- **q** = Quarter (độ phân giải thấp)
 
-Each subscriber can choose which quality they want to receive based on their device performance, network conditions, or UI layout.
+Mỗi subscriber có thể chọn chất lượng video phù hợp tùy theo hiệu suất thiết bị, điều kiện mạng, hoặc bố cục giao diện.
 
-### Dynacast Behavior
+### Hành vi của Dynacast
 
-With **Dynacast enabled**:
+Khi **Dynacast được bật**:
 
-- If no one is subscribed to a specific layer (e.g. the **f** layer), the publisher **automatically stops encoding and sending** that layer.
-- Only the layers being used by subscribers (**h** and **q**, for example) will be encoded and transmitted.
-- If later a new subscriber wants the **f** layer, the publisher resumes sending it.
+- Nếu không có ai đăng ký một layer cụ thể (ví dụ: layer **f**), publisher sẽ **tự động ngừng encode và gửi** layer đó.
+- Chỉ những layer mà subscriber đang sử dụng (**h** và **q**, chẳng hạn) mới được encode và truyền đi.
+- Nếu sau đó có subscriber mới yêu cầu layer **f**, publisher sẽ tiếp tục gửi lại layer đó.
 
-### Example
+### Ví dụ
 
-Let’s say:
+Giả sử:
 
-- The publisher is sending three layers: `f`, `h`, and `q`
-- There are 2 subscribers:
-  - One subscribes to `h`
-  - One subscribes to `q`
+- Publisher đang gửi ba layer: `f`, `h`, và `q`
+- Có 2 subscriber:
+  - Một người đăng ký layer `h`
+  - Một người đăng ký layer `q`
 
-In this case:
+Trong trường hợp này:
 
-- The **`f`** (full quality) stream is **not needed**, so it will be **paused**
-- Only **`h`** and **`q`** continue to be sent
+- Luồng **`f`** (full quality) **không cần thiết**, nên sẽ được **tạm dừng**
+- Chỉ có **`h`** và **`q`** tiếp tục được gửi
 
-> ✅ This means **less CPU usage, less bandwidth**, and **longer battery life** on the publisher's device.
+> ✅ Điều này đồng nghĩa với **giảm sử dụng CPU, giảm băng thông**, và **kéo dài thời lượng pin** trên thiết bị của publisher.
 
-## Benefits
+## Lợi ích
 
-✅ **Saves Bandwidth**  
-Only streams that are actually being watched are transmitted — reducing network load for both client and server.
+✅ **Tiết kiệm băng thông**  
+Chỉ các luồng thực sự được xem mới được truyền đi — giảm tải mạng cho cả client và server.
 
-✅ **Improves Performance**  
-By avoiding unnecessary video encoding, CPU and GPU resources are freed up — leading to smoother performance.
+✅ **Cải thiện hiệu năng**  
+Tránh việc encode video không cần thiết, giải phóng tài nguyên CPU và GPU — giúp hệ thống hoạt động mượt mà hơn.
 
-✅ **Extends Battery Life**  
-Especially important for mobile devices and laptops: fewer video encodes = lower power consumption.
+✅ **Kéo dài thời lượng pin**  
+Đặc biệt quan trọng đối với thiết bị di động và laptop: ít encode video hơn = tiêu thụ điện năng ít hơn.
 
-✅ **Scales Efficiently**  
-Helps large calls or conferences scale better, since the system isn’t overloaded with unused video layers.
+✅ **Hỗ trợ mở rộng hiệu quả**  
+Giúp các cuộc gọi hoặc hội nghị quy mô lớn hoạt động tốt hơn, vì hệ thống không bị quá tải bởi các lớp video không dùng đến.

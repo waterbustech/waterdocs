@@ -4,119 +4,116 @@ title: Tổng quan
 
 import { Package, Puzzle, FileCode, HardDrive } from "lucide-react";
 
-## What is Waterbus?
+## Waterbus là gì?
 
-**Waterbus** is a modern, high-performance **media server** and **real-time infrastructure** designed for the next generation of interactive applications. Built in Rust, it supports **WebRTC**, **Simulcast**, **SVC**, and egress to **HLS**, **LL-HLS**, and **MoQ** — optimized for low latency, scalability, and cost-efficiency.
+**Waterbus** là một **media server** và hạ tầng thời gian thực hiện đại, hiệu năng cao, được thiết kế cho thế hệ ứng dụng tương tác tiếp theo. Được xây dựng bằng Rust, Waterbus hỗ trợ **WebRTC**, **Simulcast**, **SVC**, và xuất ra các định dạng **HLS**, **LL-HLS**, và **MoQ** — tối ưu cho độ trễ thấp, khả năng mở rộng và hiệu quả chi phí.
 
-Waterbus automatically handles peer-to-peer connections for up to 2 participants. When a third participant joins, the session seamlessly migrates to the **SFU (Selective Forwarding Unit)** — ensuring optimal performance without user disruption.
+Waterbus tự động xử lý kết nối peer-to-peer cho tối đa 2 người tham gia. Khi có người thứ ba tham gia, phiên gọi sẽ tự động chuyển sang **SFU (Selective Forwarding Unit)** — đảm bảo hiệu năng tối ưu mà không làm gián đoạn người dùng.
 
 <Cards>
   <Card icon={<Package color="#cba6f7" />} href="/en/core" title="Waterbus Core">
-    The foundation of Waterbus: a high-performance SFU built in Rust with
-    support for WebRTC, simulcast, SVC, and more.
+    Nền tảng cốt lõi của Waterbus: SFU hiệu năng cao viết bằng Rust, hỗ trợ WebRTC, simulcast, SVC và nhiều hơn nữa.
   </Card>
   <Card
     icon={<Puzzle color="#89b4fa" />}
     href="/en/flutter-sdk"
     title="Flutter SDK"
   >
-    Easily integrate Waterbus into your Flutter apps with our lightweight,
-    real-time communication SDK.
+    Tích hợp Waterbus dễ dàng vào ứng dụng Flutter của bạn với SDK nhẹ, hỗ trợ truyền thông thời gian thực.
   </Card>
   <Card
     icon={<FileCode color="#a6e3a1" />}
     href="/en/zopenapi/auth/post"
     title="Open API"
   >
-    Explore our OpenAPI spec to build your own integrations or extend Waterbus
-    functionality seamlessly.
+    Khám phá spec OpenAPI để xây dựng tích hợp hoặc mở rộng tính năng Waterbus một cách liền mạch.
   </Card>
     <Card
     icon={<HardDrive color="#94e2d5" />}
     href="/en/server-sdk/usage"
     title="Server SDK"
   >
-    Build backend integrations with full control using the Waterbus Server SDK.
+    Xây dựng tích hợp backend với toàn quyền kiểm soát bằng Server SDK của Waterbus.
   </Card>
 </Cards>
 
 ---
 
-## Why Waterbus Media Server?
+## Tại sao chọn Waterbus Media Server?
 
-Waterbus is purpose-built for teams and platforms that need **low-latency**, **high-quality**, and **cost-efficient** media delivery:
+Waterbus được thiết kế dành riêng cho các đội nhóm và nền tảng cần truyền tải media với **độ trễ thấp**, **chất lượng cao**, và **hiệu quả chi phí**:
 
-- ⚡ **P2P + SFU Hybrid** — Direct peer-to-peer for 1:1 calls, automatic SFU scaling for group sessions.
-- 🦀 **Rust Performance** — Low memory footprint, high concurrency, and zero-cost abstractions.
-- 🌐 **Cloud-Native** — Distributed architecture with service discovery, load balancing, and Helm chart support.
-- 🧩 **Modular Design** — Flexible egress writers (HLS, MoQ), CLI tools, and SDKs.
+- ⚡ **Kiến trúc Hybrid P2P + SFU** — Kết nối peer-to-peer trực tiếp cho cuộc gọi 1:1, tự động mở rộng sang SFU cho nhóm lớn.
+- 🦀 **Hiệu năng Rust** — Bộ nhớ tối ưu, đa luồng mạnh mẽ, và các abstraction không tốn chi phí.
+- 🌐 **Cloud-Native** — Kiến trúc phân tán với service discovery, cân bằng tải, và hỗ trợ Helm chart.
+- 🧩 **Thiết kế mô-đun** — Các writer xuất media linh hoạt (HLS, MoQ), công cụ CLI và SDKs.
 
-Whether it's a video meeting, livestream, or classroom — Waterbus adapts intelligently and efficiently.
-
----
-
-## Use Cases
-
-### 🧑‍💼 Low-Latency Meetings
-
-- Perfect for video conferencing, daily standups, or collaborative sessions.
-- Waterbus starts with **peer-to-peer (P2P)** when there are two participants for ultra-low latency.
-- As soon as a third participant joins, the session **automatically upgrades to SFU mode**, optimizing media forwarding and reducing bandwidth usage on clients.
-- With **REMB** and **TWCC** support, Waterbus adapts stream quality in real-time to match network conditions — ensuring smooth and stable experiences across devices.
-
-### 🎙️ AMA-Style Broadcasts
-
-- Great for interactive Q&A sessions, online panels, or webinars where a few participants speak and many listen.
-- Using **MoQ (Media over QUIC)**, Waterbus allows scalable, low-latency media delivery with selective forwarding.
-- Speakers are forwarded efficiently to large audiences, while listeners benefit from fast startup time and minimal delay.
-- MoQ also helps reduce server load and egress costs by leveraging shared delivery paths.
-
-### 📺 Traditional Live Streaming
-
-- Use Waterbus to stream to a wide audience with **HLS** or **Low-Latency HLS (LL-HLS)**.
-- This is ideal for concerts, townhalls, sports events, or any broadcast-style content where compatibility and reach are critical.
-- Streams can be recorded, restreamed, or distributed via CDN — giving you flexibility in how you scale and deliver your content.
-- Waterbus provides modular output writers like `HlsWriter` that allow easy integration with cloud storage or CDN workflows.
+Dù là họp video, livestream hay lớp học, Waterbus đều thích ứng thông minh và hiệu quả.
 
 ---
 
-## Features Overview
+## Các trường hợp sử dụng
 
-- 🦀 **Rust Core** — High performance, memory safety, low-level control
-- 🔄 **P2P + SFU** — Automatically migrate from P2P to SFU at 3+ participants
-- 📡 **WebRTC SFU** — Supports Simulcast, SVC, TWCC, and REMB
-- 📤 **Egress** — Modular output via HLS, LL-HLS, and MoQ
-- ☸️ **Distributed Architecture** — Etcd-based service discovery and room routing
-- 📱 **SDKs** — Flutter SDK available, Server SDK coming soon
-- 🧪 **CLI Tooling** — Developer utilities for testing and automation
+### 🧑‍💼 Họp với độ trễ thấp
+
+- Phù hợp cho hội nghị video, cuộc họp nhanh, hoặc phiên làm việc nhóm.
+- Waterbus khởi đầu với **kết nối peer-to-peer (P2P)** khi có 2 người để giảm tối đa độ trễ.
+- Khi có người thứ ba, phiên họp sẽ **tự động chuyển sang chế độ SFU**, tối ưu việc chuyển tiếp media và giảm băng thông trên client.
+- Hỗ trợ **REMB** và **TWCC** giúp Waterbus tự điều chỉnh chất lượng stream theo điều kiện mạng, đảm bảo trải nghiệm mượt mà trên nhiều thiết bị.
+
+### 🎙️ Phát sóng AMA
+
+- Lý tưởng cho các phiên hỏi đáp tương tác, panel trực tuyến, hoặc webinar có nhiều người nghe và ít người nói.
+- Sử dụng **MoQ (Media over QUIC)**, Waterbus hỗ trợ truyền media mở rộng với độ trễ cực thấp.
+- Người nói được forward hiệu quả đến đông đảo khán giả, người xem hưởng lợi từ thời gian khởi động nhanh và độ trễ thấp.
+- MoQ cũng giảm tải server và chi phí egress nhờ tận dụng các đường truyền chia sẻ.
+
+### 📺 Phát trực tiếp truyền thống
+
+- Dùng Waterbus để phát tới đông đảo khán giả với **HLS** hoặc **Low-Latency HLS (LL-HLS)**.
+- Phù hợp cho các sự kiện như concert, họp báo, thể thao, hoặc nội dung phát sóng truyền thống cần độ tương thích cao.
+- Stream có thể được ghi lại, phát lại hoặc phân phối qua CDN — giúp bạn linh hoạt trong việc mở rộng và phân phối nội dung.
+- Waterbus cung cấp các writer đầu ra mô-đun như `HlsWriter` để dễ dàng tích hợp với lưu trữ đám mây hoặc workflow CDN.
 
 ---
 
-## Architecture Overview
+## Tổng quan tính năng
+
+- 🦀 **Rust Core** — Hiệu năng cao, an toàn bộ nhớ, kiểm soát cấp thấp
+- 🔄 **P2P + SFU** — Tự động chuyển từ P2P sang SFU khi có 3+ người
+- 📡 **WebRTC SFU** — Hỗ trợ Simulcast, SVC, TWCC và REMB
+- 📤 **Egress** — Xuất media mô-đun qua HLS, LL-HLS, và MoQ
+- ☸️ **Kiến trúc phân tán** — Phát hiện dịch vụ và định tuyến phòng qua etcd
+- 📱 **SDKs** — Có Flutter SDK, Server SDK sắp ra mắt
+- 🧪 **Công cụ CLI** — Tiện ích cho lập trình viên để test và tự động hóa
+
+---
+
+## Tổng quan kiến trúc
 
 <img src="/images/arch.svg" alt="Architecture Diagram" />
 
-Each SFU Node is responsible for:
+Mỗi node SFU chịu trách nhiệm:
 
-- Establishing peer connections
-- Forwarding RTP/RTCP
-- Dynamic track replacement and quality adaptation
-- Streaming to external outputs (HLS, MoQ)
+- Thiết lập kết nối peer
+- Forward RTP/RTCP
+- Thay thế track và điều chỉnh chất lượng động
+- Streaming ra các output bên ngoài (HLS, MoQ)
 
-<Callout title="Info">
-  In production deployments, Waterbus runs as distributed services over
-  QUIC/gRPC with etcd for coordination.
+<Callout title="Thông tin">
+  Trong môi trường production, Waterbus chạy như các dịch vụ phân tán qua
+  QUIC/gRPC và sử dụng etcd để phối hợp.
 </Callout>
 
 ---
 
-## Enjoy
+## Thưởng thức
 
-Waterbus is built for developers who care about **performance**, **control**, and **user experience**. Whether you're prototyping a new idea or scaling a global platform, Waterbus is the media infrastructure that works with you.
+Waterbus được xây dựng cho các developer quan tâm đến **hiệu năng**, **kiểm soát**, và **trải nghiệm người dùng**. Dù bạn đang prototype ý tưởng mới hay mở rộng nền tảng toàn cầu, Waterbus là hạ tầng media đồng hành cùng bạn.
 
-→ Get started with:
+→ Bắt đầu với:
 
-- 🧑‍💻 [Quickstart Guide](/core/local)
-- 📱 [Using the Flutter SDK](/flutter-sdk)
+- 🧑‍💻 [Hướng dẫn nhanh](/core/local)
+- 📱 [Sử dụng Flutter SDK](/flutter-sdk)
 
-Happy building 🚀
+Chúc bạn xây dựng thành công 🚀

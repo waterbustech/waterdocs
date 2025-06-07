@@ -2,13 +2,13 @@
 title: Architecture
 ---
 
-Waterbus is a modular, distributed media infrastructure built for real-time performance, cost-efficiency, and scalability. It separates concerns into clear layers, while grouping key components together in real-world deployments.
+Waterbus là một hạ tầng truyền thông thời gian thực theo mô-đun, được xây dựng để đạt hiệu năng cao, tối ưu chi phí và dễ dàng mở rộng. Nó phân chia trách nhiệm thành các lớp rõ ràng, đồng thời nhóm các thành phần quan trọng lại với nhau trong triển khai thực tế.
 
 ---
 
-## Layered Architecture
+## Kiến trúc phân lớp
 
-At a logical level, Waterbus consists of four main layers:
+Ở mức logic, Waterbus bao gồm bốn lớp chính:
 
 <div align="center">
   <img src="/images/layer-arch.svg" alt="Architecture Diagram" />
@@ -16,58 +16,58 @@ At a logical level, Waterbus consists of four main layers:
 
 ### 1. Signaling Layer
 
-- Handles WebSocket/Socket.IO signaling from clients.
-- Manages join/leave, publish/subscribe, renegotiation events.
-- Maintains session states and initiates routing.
+- Xử lý signaling từ client qua WebSocket/Socket.IO.
+- Quản lý các sự kiện tham gia/rời phòng, publish/subscribe, và renegotiation.
+- Duy trì trạng thái phiên hoạt động và khởi tạo quá trình định tuyến.
 
 ### 2. Dispatcher Layer
 
-- Performs room assignment and SFU selection.
-- Uses **etcd** for service discovery and live node tracking.
-- Balances load and routes clients to the optimal SFU node.
+- Thực hiện phân phòng (room assignment) và chọn SFU.
+- Sử dụng **etcd** cho việc khám phá dịch vụ (service discovery) và theo dõi node hoạt động.
+- Cân bằng tải và định tuyến client tới node SFU tối ưu.
 
 ### 3. SFU Layer
 
-- Core of media routing: RTP forwarding, congestion control, simulcast/SVC adaptation.
-- Receives peer connections and routes media with minimal delay.
-- Supports REMB, TWCC, and track replacement mechanisms.
+- Cốt lõi của định tuyến media: chuyển tiếp RTP, kiểm soát nghẽn mạng, thích ứng simulcast/SVC.
+- Tiếp nhận kết nối từ peer và định tuyến media với độ trễ tối thiểu.
+- Hỗ trợ REMB, TWCC và cơ chế thay thế track (track replacement).
 
 ### 4. Egress Layer
 
-- Transforms real-time media into broadcast formats:
-  - **HLS / LL-HLS** for traditional live streaming.
-  - **MoQ** for scalable low-latency broadcasting.
-- Uses modular writers (`HlsWriter`, `MoQWriter`, etc.).
+- Chuyển đổi media thời gian thực sang các định dạng broadcast:
+  - **HLS / LL-HLS** cho truyền phát trực tiếp truyền thống.
+  - **MoQ** cho truyền phát độ trễ thấp có thể mở rộng.
+- Sử dụng các writer theo mô-đun (`HlsWriter`, `MoQWriter`, v.v.).
 
 ---
 
-## Deployment Topology
+## Topology triển khai
 
-While logically separated, Waterbus components are grouped in practice to optimize for latency and performance:
+Mặc dù được phân lớp về mặt logic, các thành phần của Waterbus trong thực tế được gom lại để tối ưu độ trễ và hiệu năng:
 
 <img src="/images/arch.svg" alt="Architecture Diagram" />
 
 ### Signaling + Dispatcher Node
 
-- Co-located to reduce signaling latency.
-- Exposes public WebSocket and HTTP APIs.
-- Manages room creation and SFU assignment.
+- Đặt cùng nhau để giảm độ trễ signaling.
+- Cung cấp API WebSocket và HTTP công khai.
+- Quản lý tạo phòng và gán SFU.
 
 ### SFU + Egress Node
 
-- Media engine colocated with stream output.
-- Avoids cross-node media copy for lower CPU/network usage.
-- Stateless design for easy horizontal scaling.
+- Động cơ xử lý media và xuất stream được đặt cùng nhau.
+- Tránh sao chép media giữa các node, giảm sử dụng CPU/mạng.
+- Thiết kế không trạng thái (stateless) giúp dễ dàng mở rộng theo chiều ngang.
 
 ---
 
-## Coordination & Communication
+## Điều phối & Giao tiếp
 
-### Service Coordination
+### Điều phối dịch vụ
 
-- **etcd**: Backbone of dynamic service discovery and room lifecycle management.
-- **Redis (optional)**: Pub/sub mechanism for signaling across multiple instances.
+- **etcd**: Xương sống của khám phá dịch vụ động và quản lý vòng đời phòng.
+- **Redis (tùy chọn)**: Cơ chế pub/sub để signaling giữa các instance.
 
-### Internal Protocols
+### Giao thức nội bộ
 
-- **gRPC**: Control plane API across Waterbus modules.
+- **gRPC**: API control plane giữa các module của Waterbus.

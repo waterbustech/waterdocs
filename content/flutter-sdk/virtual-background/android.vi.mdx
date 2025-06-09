@@ -2,9 +2,9 @@
 title: Android
 ---
 
-## Dependencies
+## Dependencies (Thư viện phụ thuộc)
 
-Add the dependencies for the Mediapipe Android libraries to the module's app-level gradle file, which is usually app/build.gradle:
+Thêm các thư viện phụ thuộc của Mediapipe Android vào file gradle cấp module, thường là app/build.gradle
 
 ```groovy
 implementation 'com.google.mediapipe:tasks-vision:0.10.11'
@@ -14,11 +14,17 @@ implementation 'com.google.mediapipe:tasks-vision:0.10.11'
 
 ## Common WebRTC terms you should know
 
-1. VideoFrame: It contains the buffer of the frame captured by the camera device in I420 format.
-2. VideoSink: It is used to send the frame back to [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) native source.
-3. VideoSource: It reads the camera device, produces VideoFrames, and delivers them to VideoSinks.
-4. VideoProcessor: It is an interface provided by [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) to update videoFrames produced by videoSource .
-5. MediaStream: It is an API related to [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) which provides support for streaming audio and video data. It consists of zero or more [MediaStreamTrack](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack) objects, representing various audio or video tracks
+Dưới đây là bản dịch đoạn về các thuật ngữ phổ biến trong WebRTC:
+
+---
+
+## Các thuật ngữ phổ biến về WebRTC bạn nên biết
+
+1. **VideoFrame**: Chứa bộ nhớ đệm (buffer) của khung hình được thiết bị camera ghi lại ở định dạng I420.
+2. **VideoSink**: Được dùng để gửi khung hình trở lại nguồn gốc native của [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API).
+3. **VideoSource**: Đọc dữ liệu từ thiết bị camera, tạo ra các VideoFrame và chuyển đến các VideoSink.
+4. **VideoProcessor**: Là interface do [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) cung cấp để cập nhật các VideoFrame được tạo bởi VideoSource.
+5. **MediaStream**: Là API liên quan đến [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) hỗ trợ streaming dữ liệu âm thanh và video. Nó gồm một hoặc nhiều đối tượng [MediaStreamTrack](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack), đại diện cho các track âm thanh hoặc video khác nhau.
 
 ---
 
@@ -91,7 +97,7 @@ videoSource?.setVideoProcessor(object : VideoProcessor {
 
 ---
 
-### Initialize Mediapipe Image Segmenter
+### Khởi tạo Mediapipe Image Segmenter
 
 ```kotlin
 this.imageSegmentationHelper = ImageSegmenterHelper(
@@ -110,7 +116,7 @@ this.imageSegmentationHelper = ImageSegmenterHelper(
 
 ---
 
-### Handle Person Mask from Mediapipe
+### Xử lý Person Mask from Mediapipe
 
 ```kotlin
 override fun onResults(resultBundle: ImageSegmenterHelper.ResultBundle) {

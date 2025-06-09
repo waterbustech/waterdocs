@@ -2,19 +2,19 @@
 title: Android
 ---
 
-We will use `simple_pip_mode` to implement PiP on Android
+Chúng ta sẽ sử dụng `simple_pip_mode` để triển khai chế độ PiP trên Android
 
 ---
 
-### Installation
+### Cài đặt
 
-- In the dependencies: section of your pubspec.yaml, add the following line:
+- Trong phần `dependencies:` của file `pubspec.yaml`, thêm dòng sau:
 
 ```yaml
 simple_pip_mode: <latest_version>
 ```
 
-- Update `AndroidManifest.xml`:
+- Cập nhật `AndroidManifest.xml`:
 
 ```xml
 <activity
@@ -31,7 +31,7 @@ simple_pip_mode: <latest_version>
 
 ---
 
-### Setting automatic pip mode
+### Cài đặt chế độ PiP tự động (Setting automatic pip mode)
 
 ```dart
 void _onEventChanged(CallbackPayload event) {
@@ -45,9 +45,9 @@ void _onEventChanged(CallbackPayload event) {
 
 ---
 
-### Setup PiP View
+### Thiết lập giao diện PiP (Setup PiP View)
 
-Wrap `body` of `MeetingScreen` by `PipWidget`:
+Bọc phần `body` của `MeetingScreen` bởi `PipWidget`:
 
 ```dart
 if (Platform.isAndroid) {

@@ -4,13 +4,13 @@ title: iOS
 
 <Callout>In this document, I use `VisionKit` to separate background, but *VNGeneratePersonInstanceMaskRequest* only support iOS 17+</Callout>
 
-## Common WebRTC terms you should know
+## Các thuật ngữ phổ biến về WebRTC bạn nên biết
 
-1. VideoFrame: It contains the buffer of the frame captured by the camera device in I420 format.
-2. VideoSink:  It is used to send the frame back to [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) native source.
-3. VideoSource: It reads the camera device, produces VideoFrames, and delivers them to VideoSinks.
-4. VideoProcessor: It is an interface provided by [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) to update videoFrames produced by videoSource .
-5. MediaStream: It is an API related to [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) which provides support for streaming audio and video data. It consists of zero or more [MediaStreamTrack](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack) objects, representing various audio or video tracks
+1. **VideoFrame**: Chứa bộ nhớ đệm (buffer) của khung hình được thiết bị camera ghi lại ở định dạng I420.
+2. **VideoSink**: Được dùng để gửi khung hình trở lại nguồn gốc native của [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API).
+3. **VideoSource**: Đọc dữ liệu từ thiết bị camera, tạo ra các VideoFrame và chuyển đến các VideoSink.
+4. **VideoProcessor**: Là interface do [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) cung cấp để cập nhật các VideoFrame được tạo bởi VideoSource.
+5. **MediaStream**: Là API liên quan đến [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) hỗ trợ streaming dữ liệu âm thanh và video. Nó gồm một hoặc nhiều đối tượng [MediaStreamTrack](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack), đại diện cho các track âm thanh hoặc video khác nhau.
 
 ---
 
@@ -85,7 +85,7 @@ import WebRTC
 
 ---
 
-### Set delegate VideoSouce to getting the VideoFrame from WebRTC
+### Đặt delegate cho VideoSource để lấy VideoFrame từ WebRTC
 
 ```objective-c
 videoPipe = [[RTCVideoPipe alloc] initWithVideoSource: videoSource];
@@ -95,7 +95,7 @@ videoPipe = [[RTCVideoPipe alloc] initWithVideoSource: videoSource];
 
 ---
 
-### Create a class implement VisionKit to separate background
+### Tạo một lớp implement VisionKit để tách nền
 
 ```swift
 import Foundation
@@ -161,7 +161,7 @@ var maskRequest: VNGeneratePersonInstanceMaskRequest?
 
 ---
 
-### Draw segmented and background on canvas
+### Vẽ phần đã tách (segmented) và nền (background) lên canvas
 
 ```swift
 func applyForegroundMask(to pixelBuffer: CVPixelBuffer, backgroundImage: UIImage, completion: @escaping (CVPixelBuffer?, Error?) -> Void) {

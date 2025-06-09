@@ -2,29 +2,29 @@
 title: iOS
 ---
 
-This guide describes how to implement Picture-in-Picture (PiP) for your iOS app using AVPictureInPictureController, integrated into a custom ViewController that replaces the default FlutterViewController. This feature allows users to continue video calls in a floating window while using other apps.
+Hướng dẫn này mô tả cách triển khai tính năng Picture-in-Picture (PiP) cho ứng dụng iOS của bạn bằng cách sử dụng `AVPictureInPictureController`, được tích hợp vào một `ViewController` tùy chỉnh thay thế cho `FlutterViewController` mặc định. Tính năng này cho phép người dùng tiếp tục cuộc gọi video trong một cửa sổ nổi trong khi sử dụng các ứng dụng khác.
 
-## Approach
+## Cách tiếp cận
 
-- Based on Apple Docs, we will implement `AVPictureInPictureController` in `ViewController`. So we must create a new `ViewController` and replace `FlutterViewController`
-- Configure parameters for `AVPictureInPictureController`
-- Create a view that displays Video if the camera is turned on, and an view when the camera is turned off
-- Get `VideoFrame` from `WebRTC` to display on the view we designed in the step above
-- Implement `MethodChannel` to execute from `Flutter`
+- Dựa trên tài liệu của Apple, chúng ta sẽ triển khai `AVPictureInPictureController` trong `ViewController`. Do đó, cần tạo một `ViewController` mới và thay thế `FlutterViewController`.
+- Cấu hình các tham số cho `AVPictureInPictureController`.
+- Tạo một view để hiển thị Video nếu camera được bật, và một view khác khi camera tắt.
+- Lấy `VideoFrame` từ `WebRTC` để hiển thị trên view đã thiết kế ở bước trên.
+- Triển khai `MethodChannel` để giao tiếp từ phía Flutter.
 
 ---
 
-## Implementation Steps
+## Các bước triển khai
 
-### 1. Replace `FlutterViewController` with Custom `WaterbusViewController`
+### 1. Thay thế `FlutterViewController` bằng `WaterbusViewController` tùy chỉnh
 
-We create a new WaterbusViewController that:
+Chúng ta tạo một `WaterbusViewController` mới có chức năng:
 
-- Initializes a Flutter view.
-- Configures and controls the PiP flow using AVPictureInPictureController.
-- Manages lifecycle methods and views for both camera-on and camera-off states.
+- Khởi tạo view Flutter.
+- Cấu hình và điều khiển luồng PiP bằng `AVPictureInPictureController`.
+- Quản lý vòng đời và các view trong hai trạng thái: camera bật và camera tắt.
 
-#### Code Setup
+#### Cấu hình mã nguồn
 
 ```swift
 class WaterbusViewController: FlutterViewController {
@@ -134,7 +134,7 @@ class WaterbusViewController: FlutterViewController {
 }
 ```
 
-#### Extension for PiP Delegate
+#### Extension cho PiP Delegate
 
 ```swift
 extension WaterbusViewController: AVPictureInPictureControllerDelegate {
@@ -154,7 +154,7 @@ extension WaterbusViewController: AVPictureInPictureControllerDelegate {
 }
 ```
 
-#### Extension for Embedding Flutter View
+#### Extension cho Embedding Flutter View
 
 ```swift
 extension UIViewController {
@@ -196,9 +196,9 @@ extension UIViewController {
 
 ---
 
-### 2. Picture-in-Picture View: Camera On/Off Handling
+### 2. Chế độ Picture-in-Picture:  Xử lý khi Camera Bật/Tắt
 
-Create a view that displays Video if the camera is turned on, and an view when the camera is turned off
+Tạo một view để hiển thị video nếu camera được bật và hiển thị một view khác khi camera tắt.
 
 ```swift
 class PictureInPictureView: UIView {
@@ -227,7 +227,7 @@ class PictureInPictureView: UIView {
 }
 ```
 
-Setup Child View
+Cấu hình các Child View
 
 ```swift
     func setupView() {
@@ -339,19 +339,18 @@ Setup Child View
 
 ---
 
-### 3. Update `Main.storyboard`
+### 3. Cập nhật `Main.storyboard`
 
-In your Xcode project:
+Trong dự án Xcode của bạn:
 
-- Open `Main.storyboard`
-- Select the main view controller
-- Change the class from `FlutterViewController` to `WaterbusViewController`
+- Mở `Main.storyboard`
+- Chọn `ViewController` chính
+- Thay đổi class từ `FlutterViewController` sang `WaterbusVie
 
-![PiP iOS](https://media.waterbus.tech/ios-pip.png)
 
 ---
 
-### 4. Get VideoFrame from WebRTC to display on the view we designed in the step above
+### 4. Lấy `VideoFrame` từ WebRTC để hiển thị lên `View` đã thiết kế ở bước trên
 
 ```swift
     func addRemoteRendererToView() {
@@ -359,18 +358,18 @@ In your Xcode project:
         self.remoteRenderer!.contentMode = .scaleAspectFit
         self.remoteRenderer!.videoContentMode = .scaleAspectFill
 
-        // Get RemoteMTLVideoView
+        // Lấy RemoteMTLVideoView
         let mediaRemoteStream = FlutterWebRTCPlugin.sharedSingleton().stream(forId: self.remoteStreamId, peerConnectionId: self.peerConnectionId)
         mediaRemoteStream?.videoTracks.first?.add(self.remoteRenderer!)
 
         self.remoteView.addSubview(self.remoteRenderer!)
         self.configurationLayoutConstraintForRenderer()
     }
-```
+
 
 ---
 
-### 5. Implement MethodChannel to execute from Flutter
+### 5. Triển khai `MethodChannel` để gọi từ phía Flutter
 
 - iOS Side:
 

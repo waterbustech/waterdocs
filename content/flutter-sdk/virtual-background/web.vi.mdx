@@ -2,9 +2,9 @@
 title: Web
 ---
 
-## Create a Background Segmentation Script
+## Tạo Script Phân Đoạn Nền (Background Segmentation)
 
-Create a new file called `virtual-background.js` to handle background segmentation using Mediapipe.
+Tạo một file mới tên là virtual-background.js để xử lý phân đoạn nền sử dụng Mediapipe.
 
 ```js
 import * as vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js";
@@ -152,18 +152,17 @@ window.segment = segment;
 window.setBackgroundImage = setBackgroundImage;
 ```
 
-Add the script to your HTML
-Make sure to include the virtual-background.js script in your HTML file:
-
+Thêm Script vào HTML của bạn
+Hãy chắc chắn rằng bạn đã thêm file virtual-background.js vào trong file HTML của bạn:
 ```html
 <script type="module" src="virtual-background.js"></script>
 ```
 
 ---
 
-## Use Virtual Background in Flutter
+## Sử dụng Virtual Background trong Flutter
 
-To enable virtual background functionality in your Flutter application, use the following Dart code.
+Để kích hoạt tính năng virtual background trong ứng dụng Flutter của bạn, hãy sử dụng đoạn mã Dart sau:
 
 ```dart
 @JS()

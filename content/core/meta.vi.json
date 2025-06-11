@@ -1,6 +1,6 @@
 {
-  "title": "Core",
-  "description": "The Waterbus Core",
+  "title": "Cốt lõi",
+  "description": "Lõi của Waterbus",
   "icon": "Package",
   "pages": [
     "---Giới thiệu---",
@@ -14,14 +14,14 @@
     "adaptive-stream",
     "demo",
     "example-architecture",
-    "---Usage---",
+    "---Sử dụng---",
     "local",
     "k8s",
     "cli",
-    "---Explains---",
+    "---Giải nghĩa---",
     "bandwidth-saving",
     "faq",
-    "---Knowledges---",
+    "---Kiến thức---",
     "[Media over Quic](https://quic.video/)",
     "[WebRTC for the Curious](https://webrtcforthecurious.com/)",
     "[Issues](https://github.com/waterbustech/waterbus-rs/issues/)"

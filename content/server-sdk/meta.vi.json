@@ -1,6 +1,6 @@
 {
   "title": "Server SDK",
-  "description": "Tích hợp vào hệ thống backend của bạn",
+  "description": "Tích hợp vào backend",
   "icon": "HardDrive",
   "pages": [
     "installation",

@@ -1,6 +1,6 @@
 {
     "title": "Flutter SDK",
-    "description": "Integrate into Flutter",
+    "description": "Tích hợp vào Flutter",
     "icon": "Puzzle",
     "pages": [
       "---Cài đặt---",
@@ -12,7 +12,7 @@
       "virtual-background",
       "screen-sharing",
       "beauty-filters",
-      "---Tiện ích mở rộng khác---",
+      "---Plugins khác---",
       "moq-client",
       "hls-player",
       "[flutter-webrtc-plus](https://pub.dev/packages/flutter_webrtc_plus)"

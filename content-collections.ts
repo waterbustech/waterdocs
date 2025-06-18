@@ -16,7 +16,7 @@ const docs = defineCollection({
 const metas = defineCollection({
   name: "meta",
   directory: "content",
-  include: "**/meta.json",
+  include: "**/*.json",
   parser: "json",
   schema: createMetaSchema,
 });

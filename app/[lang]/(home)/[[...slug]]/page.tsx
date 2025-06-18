@@ -41,7 +41,7 @@ export default async function Page(props: {
     >
       <DocsBody>
       <div style={{ position: 'relative', width: "100%", height: "100%" }}>
-      <div  style={{zIndex: 1, width: "100%", height: "200px", position: "absolute"}}>
+      <div  style={{zIndex: -1, width: "100%", height: "200px", position: "absolute"}}>
           <svg 
             width="100%" 
             height="200px" 

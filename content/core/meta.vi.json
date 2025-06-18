@@ -5,7 +5,6 @@
   "pages": [
     "---Giới thiệu---",
     "index",
-    "concept",
     "architecture",
     "sfu",
     "egress",
@@ -18,7 +17,7 @@
     "local",
     "k8s",
     "cli",
-    "---Giải nghĩa---",
+    "---Giải thích---",
     "bandwidth-saving",
     "faq",
     "---Kiến thức---",

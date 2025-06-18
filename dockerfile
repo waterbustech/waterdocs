@@ -1,19 +1,24 @@
-FROM oven/bun:1.1.3 AS builder
+FROM docker.io/oven/bun:1 AS builder
 
 WORKDIR /app
 
+# Copy package files and install dependencies
+COPY bun.lock package.json ./
 COPY . .
 
-RUN bun install
-
+RUN bun install --frozen-lockfile
 RUN bun run build
-
-FROM oven/bun:1.1.3 AS runner
+   
+FROM docker.io/oven/bun:1 AS runner
 
 WORKDIR /app
 
-COPY --from=builder /app /app
+# Copy only the necessary files from builder
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/bun.lock ./bun.lock
+COPY --from=builder /app/node_modules ./node_modules
 
-EXPOSE 3000
-
+# Start the server
 CMD ["bun", "start"]

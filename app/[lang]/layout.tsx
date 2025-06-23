@@ -1,6 +1,6 @@
 import '../global.css';
 import { RootProvider } from 'fumadocs-ui/provider';
-import { IBM_Plex_Mono, Ubuntu } from 'next/font/google';
+import { IBM_Plex_Mono, Tomorrow, Ubuntu } from 'next/font/google';
 import type { ReactNode } from 'react';
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -8,7 +8,12 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: '400'
 });
 
-const ubuntu = Ubuntu({
+const tomorrow = Tomorrow({
+  subsets: ['latin'],
+  weight: '400',
+});
+
+const ubuntu = Tomorrow({
   subsets: ['latin'],
   weight: '400',
 });
@@ -32,7 +37,7 @@ export default async function Layout({
 }) {
   const { lang } = await params;
   return  (
-    <html lang="en" className={`${ubuntu.className} ${ibmPlexMono.className}`} suppressHydrationWarning>
+    <html lang="en" className={`${ubuntu.className} ${tomorrow.className} ${ibmPlexMono.className}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
         <RootProvider
           i18n={{

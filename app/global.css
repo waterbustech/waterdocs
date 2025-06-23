@@ -32,21 +32,37 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
-p {
+html[lang="vi"] p,
+html[lang="vi"] li {
+  font-family: 'Ubuntu', sans-serif;
   font-weight: 400;
-  font-family: 'Ubuntu', sans-serif;
 }
 
-li {
-  font-family: 'Ubuntu', sans-serif;
+html[lang="en"] p,
+html[lang="en"] li {
+  font-family: 'Tomorrow', sans-serif;
+  font-weight: 400;
 }
 
-h1, h2, button, .font-medium {
-  font-family: 'IBM Plex Mono' !important;
+
+html[lang="vi"] h1,
+html[lang="vi"] h2,
+html[lang="vi"] button,
+html[lang="vi"] .font-medium,
+html[lang="vi"] a {
+  font-family: 'IBM_Plex_Mono', sans-serif !important;
 }
+
+html[lang="en"] h1,
+html[lang="en"] h2,
+html[lang="en"] button,
+html[lang="en"] .font-medium,
+html[lang="en"] a {
+  font-family: 'Tomorrow', sans-serif !important;
+}
+
 
 a {
-  font-family: 'IBM Plex Mono' !important;
   text-decoration: none;
   color: inherit;
   transition: color 0.3s ease;

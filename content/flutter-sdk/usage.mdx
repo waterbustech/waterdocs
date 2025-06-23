@@ -2,28 +2,39 @@
 title: API Guide
 ---
 
-## Initialize
+## Initialization
 
-Firstly, call `WaterbusSdk.instance.initial` to set your server url and sdk connect WebSocket.
+Before using any feature, initialize the SDK with server and encryption config:
 
 ```dart
-await WaterbusSdk.instance.initializeApp(
-  apiUrl: 'https://service.waterbus.tech/busapi/v1/',
-  wsUrl: 'wss://sfu.waterbus.tech',
-  privateMessageKey: "waterbus@2024",
-);
+import 'package:waterbus_sdk/waterbus_sdk.dart';
+
+void main() async {
+  final config = SdkConfig(
+    baseUrl: ServerConfig(
+      url: "https://your.waterbus.server",
+      suffixUrl: "/api/v1",
+    ),
+    messageEncryptionKey: 'your-secret-message-key',
+    webrtcE2eeKey: 'your-e2ee-key',
+  );
+
+  await WaterbusSdk.instance.initialize(config: config);
+}
 ```
 
 ---
 
-## Authorization
+## Authentication
 
 ### Create Token
 
-Create token will auto connect websocket if success
+Create a new session using a token:
 
 ```dart
-await WaterbusSdk.instance.createToken(payload);
+final result = await WaterbusSdk.instance.createToken(
+  payload: AuthPayload(token: 'your-jwt-token'),
+);
 ```
 
 ### Refresh Token
@@ -42,35 +53,41 @@ await WaterbusSdk.instance.deleteToken();
 
 ---
 
-## Room
+## User Management
+
+### Get user profile
+
+```dart
+final profile = await WaterbusSdk.instance.getProfile();
+```
+
+### Update profile
+
+```dart
+await WaterbusSdk.instance.updateProfile(user: updatedUser);
+```
+
+### Change username
+
+```dart
+await WaterbusSdk.instance.updateUsername(username: "new_username");
+```
+
+## Room Management
 
 ### Create room
 
 ```dart
-final Meeting? meeting = await WaterbusSdk.instance.createRoom(
-  meeting: Meeting(title: 'Meeting with Kai Dao'),
-  password: 'password',
-  userId: 1, // <- modify to your user id
-);
-```
-
-### Update room
-
-```dart
-final Meeting? meeting = await WaterbusSdk.instance.updateRoom(
-  meeting:  Meeting(title: 'Meeting with Kai Dao - 2'),
-  password: 'new-password',
-  userId: 1, // <- modify to your user id
+final result = await WaterbusSdk.instance.createRoom(
+  params: RoomParams(name: "Team Standup"),
 );
 ```
 
 ### Join room
 
 ```dart
-final Meeting? meeting = await WaterbusSdk.instance.joinRoom(
-  meeting: _currentMeeting,
-  password: 'room-password-here',
-  userId: 1, // <- modify to your user id
+await WaterbusSdk.instance.joinRoom(
+  params: RoomParams(code: "ROOM_CODE"),
 );
 ```
 
@@ -80,57 +97,54 @@ final Meeting? meeting = await WaterbusSdk.instance.joinRoom(
 await WaterbusSdk.instance.leaveRoom();
 ```
 
-### Prepare Media
-
-<Callout>
-will prepare the camera and microphone for you to turn on and off before entering the meeting
-</Callout>
+## Media Controls
 
 ```dart
 await WaterbusSdk.instance.prepareMedia();
+await WaterbusSdk.instance.toggleVideo();
+await WaterbusSdk.instance.toggleAudio();
+await WaterbusSdk.instance.switchCamera();
 ```
 
----
-
-### Set callback
-
-- Callback event
+### Screen sharing
 
 ```dart
-void _onEventChanged(CallbackPayload event) {
-  switch (event.event) {
-    case CallbackEvents.shouldBeUpdateState:
-      break;
-    case CallbackEvents.newParticipant:
-      break;
-    case CallbackEvents.participantHasLeft:
-      break;
-    case CallbackEvents.meetingEnded:
-      break;
-    default:
-      break;
-  }
-}
-
-WaterbusSdk.instance.onEventChangedRegister = _onEventChanged;
+await WaterbusSdk.instance.startScreenSharing();
+// Stop
+await WaterbusSdk.instance.stopScreenSharing();
 ```
 
-- Callback subtitle
+### Raise or lower hand
 
 ```dart
-void _onSubtitleChanged(Subtitle sub) {
-  print('${sub.participant}: ${sub.content}');
-}
-
-WaterbusSdk.instance.setOnSubtitle = _onSubtitleChanged;
+WaterbusSdk.instance.toggleRaiseHand();
 ```
 
-- Callback video sender stats
+### Virtual Background
 
 ```dart
-void _handleOnStatsChanged(VideoSenderStats stats) {
-    print(stats.toString());
-}
+await WaterbusSdk.instance.enableVirtualBackground(
+  backgroundImage: yourImageBytes,
+  thresholdConfidence: 0.7,
+);
 
-WaterbusSdk.onStatsChanged = _handleOnStatsChanged;
+// Disable:
+await WaterbusSdk.instance.disableVirtualBackground();
+```
+
+## Additional Utilities
+
+Get supported codecs
+
+```dart
+final codecs = await WaterbusSdk.instance.getSupportedVideoCodecs();
+```
+
+Picture-in-Picture
+
+```dart
+await WaterbusSdk.instance.setPictureInPictureEnabled(
+  textureId: 'your_texture_id',
+  enabled: true,
+);
 ```

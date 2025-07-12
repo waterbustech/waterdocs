@@ -28,6 +28,7 @@ export default async function Page(props: {
     owner: 'waterbustech',
     repo: 'waterdocs',
     path: `content/${page.file.path}`,
+    token: `Bearer ${process.env.GIT_TOKEN}`
   }) || Date.now();
   
   return (

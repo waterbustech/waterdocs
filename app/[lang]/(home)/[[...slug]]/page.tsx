@@ -24,7 +24,11 @@ export default async function Page(props: {
     display: "inline-flex",
   };
 
-  const time = Date.now();
+  const time = await getGithubLastEdit({
+    owner: 'waterbustech',
+    repo: 'waterdocs',
+    path: `content/${page.file.path}`,
+  }) || Date.now();
   
   return (
     <DocsPage

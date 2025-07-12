@@ -2,39 +2,50 @@
 title: Hướng dẫn API
 ---
 
-## Initialize
+## Khởi tạo SDK
 
-Firstly, call `WaterbusSdk.instance.initial` to set your server url and sdk connect WebSocket.
+Trước khi sử dụng bất kỳ tính năng nào, hãy khởi tạo SDK với cấu hình server và mã hóa:
 
 ```dart
-await WaterbusSdk.instance.initializeApp(
-  apiUrl: 'https://service.waterbus.tech/busapi/v1/',
-  wsUrl: 'wss://sfu.waterbus.tech',
-  privateMessageKey: "waterbus@2024",
-);
+import 'package:waterbus_sdk/waterbus_sdk.dart';
+
+void main() async {
+  final config = SdkConfig(
+    serverConfig: ServerConfig(
+      url: "https://services.waterbus.tech",
+      suffixUrl: "/busapi/v3/",
+    ),
+    messageEncryptionKey: 'your-secret-message-key',
+    webrtcE2eeKey: 'your-e2ee-key',
+  );
+
+  await WaterbusSdk.instance.initialize(config: config);
+}
 ```
 
 ---
 
-## Authorization
+## Xác thực
 
-### Create Token
+### Tạo Token
 
-Create token will auto connect websocket if success
+Tạo phiên đăng nhập mới bằng token:
 
 ```dart
-await WaterbusSdk.instance.createToken(payload);
+final Result<User> result = await WaterbusSdk.instance.createToken(
+  AuthPayload(fullName: "Waterbus", externalId: "unique-id"),
+);
 ```
 
-### Refresh Token
+### Làm mới Token
 
 ```dart
 await WaterbusSdk.instance.renewToken();
 ```
 
-### Delete Token
+### Xoá Token
 
-Delete token for disconnect websocket and prepare for create new token
+Xoá token để ngắt kết nối WebSocket và chuẩn bị tạo token mới:
 
 ```dart
 await WaterbusSdk.instance.deleteToken();
@@ -42,95 +53,106 @@ await WaterbusSdk.instance.deleteToken();
 
 ---
 
-## Room
+## Quản lý người dùng
 
-### Create room
-
-```dart
-final Meeting? meeting = await WaterbusSdk.instance.createRoom(
-  meeting: Meeting(title: 'Meeting with Kai Dao'),
-  password: 'password',
-  userId: 1, // <- modify to your user id
-);
-```
-
-### Update room
+### Lấy thông tin người dùng
 
 ```dart
-final Meeting? meeting = await WaterbusSdk.instance.updateRoom(
-  meeting:  Meeting(title: 'Meeting with Kai Dao - 2'),
-  password: 'new-password',
-  userId: 1, // <- modify to your user id
-);
+final profile = await WaterbusSdk.instance.getProfile();
 ```
 
-### Join room
+### Cập nhật hồ sơ
 
 ```dart
-final Meeting? meeting = await WaterbusSdk.instance.joinRoom(
-  meeting: _currentMeeting,
-  password: 'room-password-here',
-  userId: 1, // <- modify to your user id
-);
+await WaterbusSdk.instance.updateProfile(user: updatedUser);
 ```
 
-### Leave room
+### Đổi tên người dùng
+
+```dart
+await WaterbusSdk.instance.updateUsername(username: "new_username");
+```
+
+## Quản lý phòng
+
+### Tạo phòng
+
+```dart
+final RoomParams params = RoomParams(
+  room: Room(title: 'Daily Meeting'),
+  password: '123123',
+  userId: 'user-id',
+);
+
+final result = await WaterbusSdk.instance.createRoom(params: params);
+```
+
+### Tham gia phòng
+
+```dart
+final JoinRoomParams params = JoinRoomParams(
+  roomId: 'room-id',
+  password: 123123',
+  userId: 'user-id',
+);
+
+final Result<Room> result = await WaterbusSdk.instance.joinRoom(params: params);
+```
+
+### Rời khỏi phòng
 
 ```dart
 await WaterbusSdk.instance.leaveRoom();
 ```
 
-### Prepare Media
-
-<Callout>
-will prepare the camera and microphone for you to turn on and off before entering the meeting
-</Callout>
+## Điều khiển Media
 
 ```dart
 await WaterbusSdk.instance.prepareMedia();
+await WaterbusSdk.instance.toggleVideo();
+await WaterbusSdk.instance.toggleAudio();
+await WaterbusSdk.instance.switchCamera();
 ```
 
----
-
-### Set callback
-
-- Callback event
+### Chia sẻ màn hình
 
 ```dart
-void _onEventChanged(CallbackPayload event) {
-  switch (event.event) {
-    case CallbackEvents.shouldBeUpdateState:
-      break;
-    case CallbackEvents.newParticipant:
-      break;
-    case CallbackEvents.participantHasLeft:
-      break;
-    case CallbackEvents.meetingEnded:
-      break;
-    default:
-      break;
-  }
-}
-
-WaterbusSdk.instance.onEventChangedRegister = _onEventChanged;
+await WaterbusSdk.instance.startScreenSharing();
+// Stop
+await WaterbusSdk.instance.stopScreenSharing();
 ```
 
-- Callback subtitle
+### Giơ hoặc hạ tay
 
 ```dart
-void _onSubtitleChanged(Subtitle sub) {
-  print('${sub.participant}: ${sub.content}');
-}
-
-WaterbusSdk.instance.setOnSubtitle = _onSubtitleChanged;
+WaterbusSdk.instance.toggleRaiseHand();
 ```
 
-- Callback video sender stats
+### Phông nền ảo
 
 ```dart
-void _handleOnStatsChanged(VideoSenderStats stats) {
-    print(stats.toString());
-}
+await WaterbusSdk.instance.enableVirtualBackground(
+  backgroundImage: yourImageBytes,
+  thresholdConfidence: 0.7,
+);
 
-WaterbusSdk.onStatsChanged = _handleOnStatsChanged;
+// Disable:
+await WaterbusSdk.instance.disableVirtualBackground();
+```
+
+## Tiện ích bổ sung
+
+Lấy danh sách codec video được hỗ trợ:
+
+```dart
+final codecs = await WaterbusSdk.instance.getSupportedVideoCodecs();
+```
+
+Bật/tắt chế độ Picture-in-Picture:
+
+```dart
+await WaterbusSdk.instance.setPictureInPictureEnabled(
+  textureId: 'your_texture_id',
+  enabled: true,
+);
 ```

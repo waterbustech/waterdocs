@@ -11,9 +11,9 @@ import 'package:waterbus_sdk/waterbus_sdk.dart';
 
 void main() async {
   final config = SdkConfig(
-    baseUrl: ServerConfig(
-      url: "https://your.waterbus.server",
-      suffixUrl: "/api/v1",
+    serverConfig: ServerConfig(
+      url: "https://services.waterbus.tech",
+      suffixUrl: "/busapi/v3/",
     ),
     messageEncryptionKey: 'your-secret-message-key',
     webrtcE2eeKey: 'your-e2ee-key',
@@ -32,8 +32,8 @@ void main() async {
 Create a new session using a token:
 
 ```dart
-final result = await WaterbusSdk.instance.createToken(
-  payload: AuthPayload(token: 'your-jwt-token'),
+final Result<User> result = await WaterbusSdk.instance.createToken(
+  AuthPayload(fullName: "Waterbus", externalId: "unique-id"),
 );
 ```
 
@@ -78,17 +78,25 @@ await WaterbusSdk.instance.updateUsername(username: "new_username");
 ### Create room
 
 ```dart
-final result = await WaterbusSdk.instance.createRoom(
-  params: RoomParams(name: "Team Standup"),
+final RoomParams params = RoomParams(
+  room: Room(title: 'Daily Meeting'),
+  password: '123123',
+  userId: 'user-id',
 );
+
+final result = await WaterbusSdk.instance.createRoom(params: params);
 ```
 
 ### Join room
 
 ```dart
-await WaterbusSdk.instance.joinRoom(
-  params: RoomParams(code: "ROOM_CODE"),
+final JoinRoomParams params = JoinRoomParams(
+  roomId: 'room-id',
+  password: 123123',
+  userId: 'user-id',
 );
+
+final Result<Room> result = await WaterbusSdk.instance.joinRoom(params: params);
 ```
 
 ### Leave room

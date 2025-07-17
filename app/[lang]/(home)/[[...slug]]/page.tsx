@@ -6,12 +6,14 @@ import {
   DocsTitle,
 } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
-import { createRelativeLink } from "fumadocs-ui/mdx";
 import { RateWrapper } from "@/components/rate_wrapper";
-import { EditOnGitHub, LLMCopyButton } from "./page.client";
 import { MDXContent } from '@content-collections/mdx/react';
 import { getMDXComponents } from '@/mdx-components';
 import { getGithubLastEdit } from "fumadocs-core/server";
+import { LLMCopyButton, ViewOptions } from "./page.client";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@radix-ui/react-hover-card";
+import Link from 'fumadocs-core/link';
+import * as path from 'node:path';
 
 export default async function Page(props: {
   params: Promise<{ lang: string; slug?: string[] }>;
@@ -24,6 +26,9 @@ export default async function Page(props: {
     display: "inline-flex",
   };
 
+
+  // const { body: Mdx } = await page.data.load();;
+
   const time = await getGithubLastEdit({
     owner: 'waterbustech',
     repo: 'waterdocs',
@@ -33,6 +38,9 @@ export default async function Page(props: {
   
   return (
     <DocsPage
+      editOnGithub={
+        {owner: "waterbustech", repo: "waterdocs", path: "content"}
+      }
       lastUpdate={new Date(time)}
       tableOfContent={{
         style: "clerk",
@@ -75,12 +83,47 @@ export default async function Page(props: {
         <div style={{height: "20px"}}/>
         <DocsTitle>{page.data.title}</DocsTitle>
         <DocsDescription>{page.data.description}</DocsDescription>
-        <div style={optionDivStyle}>
+          <div style={optionDivStyle}>
             <LLMCopyButton slug={params.slug} />
-            <EditOnGitHub
-              url={`https://github.com/lambiengcode/waterdocs/tree/main/content/${page.file.path}`}
+            <ViewOptions
+              markdownUrl={`${page.url}.mdx`}
+              githubUrl={`https://github.com/lambiengcode/waterdocs/tree/main/content/${page.file.path}`}
             />
           </div>
+           {/* <div className="prose flex-1 text-fd-foreground/80">
+          <Mdx
+            components={getMDXComponents({
+              a: ({ href, ...props }) => {
+                const found = source.getPageByHref(href ?? '', {
+                  dir: path.dirname(page.path),
+                });
+
+                if (!found) return <Link href={href} {...props} />;
+
+                return (
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <Link
+                        href={
+                          found.hash
+                            ? `${found.page.url}#${found.hash}`
+                            : found.page.url
+                        }
+                        {...props}
+                      />
+                    </HoverCardTrigger>
+                    <HoverCardContent className="text-sm">
+                      <p className="font-medium">{found.page.data.title}</p>
+                      <p className="text-fd-muted-foreground">
+                        {found.page.data.description}
+                      </p>
+                    </HoverCardContent>
+                  </HoverCard>
+                );
+              },
+            })}
+          />
+        </div> */}
           <MDXContent code={page.data.body} components={getMDXComponents()} />
           <RateWrapper />
       </div>

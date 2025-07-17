@@ -11,7 +11,15 @@ const config = {
       {
         source: "/",
         destination: "/en/core",
-       permanent: true,
+        permanent: true,
+      },
+    ];
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/:path*.mdx',
+        destination: '/llms.mdx/:path*',
       },
     ];
   },

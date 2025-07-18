@@ -1,8 +1,8 @@
 import { App, Octokit } from "octokit";
 import type { ActionResponse, Feedback } from "@/components/rate";
 
-export const repo = "fumadocs";
-export const owner = "fuma-nama";
+export const repo = "waterdocs";
+export const owner = "waterbustech";
 export const DocsCategory = "Docs Feedback";
 
 let instance: Octokit | undefined;

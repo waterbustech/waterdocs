@@ -23,7 +23,14 @@ export default async function Page(props: {
   if (!page) notFound();
   // const MDXContent = page.data.body;
   const optionDivStyle = {
-    display: "inline-flex",
+    // display: "inline-flex",
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '0.5rem',
+    alignItems: 'center',
+    borderBottom: '1px solid rgb(7, 60, 129)', // a common Tailwind border color
+    paddingTop: '0.5rem',
+    paddingBottom: '1.5rem',
   };
 
 
@@ -38,9 +45,9 @@ export default async function Page(props: {
   
   return (
     <DocsPage
-      editOnGithub={
-        {owner: "waterbustech", repo: "waterdocs", path: "content"}
-      }
+      // editOnGithub={
+      //   {owner: "waterbustech", repo: "waterdocs", path: "main"}
+      // }
       lastUpdate={new Date(time)}
       tableOfContent={{
         style: "clerk",
@@ -87,7 +94,7 @@ export default async function Page(props: {
             <LLMCopyButton slug={params.slug} />
             <ViewOptions
               markdownUrl={`${page.url}.mdx`}
-              githubUrl={`https://github.com/lambiengcode/waterdocs/tree/main/content/${page.file.path}`}
+              githubUrl={`https://github.com/waterbustech/waterdocs/tree/main/content/${page.file.path}`}
             />
           </div>
            {/* <div className="prose flex-1 text-fd-foreground/80">

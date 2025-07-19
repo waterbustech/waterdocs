@@ -3,14 +3,14 @@ import {
   defineDocs,
   frontmatterSchema,
   metaSchema,
-} from 'fumadocs-mdx/config';
+} from "fumadocs-mdx/config";
 
-import { z } from 'zod';
+import { z } from "zod";
 
 // You can customise Zod schemas for frontmatter and `meta.json` here
 // see https://fumadocs.vercel.app/docs/mdx/collections#define-docs
 export const docs = defineDocs({
-  dir: 'content',
+  dir: "content",
   docs: {
     async: true,
     schema: frontmatterSchema.extend({
@@ -30,17 +30,17 @@ export const docs = defineDocs({
 });
 
 export default defineConfig({
-  lastModifiedTime: 'git',
+  lastModifiedTime: "git",
   mdxOptions: {
-    rehypeCodeOptions: {
-      lazy: true,
-      experimentalJSEngine: true,
-      langs: ['ts', 'js', 'html', 'tsx', 'mdx'],
-      inline: 'tailing-curly-colon',
-      themes: {
-        light: 'catppuccin-latte',
-        dark: 'catppuccin-mocha',
-      },
-    },
+    // rehypeCodeOptions: {
+    //   lazy: true,
+    //   experimentalJSEngine: true,
+    //   langs: ["ts", "js", "html", "tsx", "mdx"],
+    //   inline: "tailing-curly-colon",
+    //   themes: {
+    //     light: "catppuccin-latte",
+    //     dark: "catppuccin-mocha",
+    //   },
+    // },
   },
 });

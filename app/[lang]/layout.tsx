@@ -2,6 +2,7 @@ import '../global.css';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { IBM_Plex_Mono, Tomorrow, Ubuntu } from 'next/font/google';
 import type { ReactNode } from 'react';
+import SearchDialog from '@/components/search';
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -40,6 +41,9 @@ export default async function Layout({
     <html lang="en" className={`${ubuntu.className} ${tomorrow.className} ${ibmPlexMono.className}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
         <RootProvider
+          search={{
+            SearchDialog,
+          }}
           i18n={{
             locale: lang,
             locales: [

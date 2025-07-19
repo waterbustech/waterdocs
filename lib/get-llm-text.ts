@@ -1,21 +1,39 @@
-import { remark } from "remark";
-import remarkGfm from "remark-gfm";
-import { source } from "@/lib/source";
-import remarkMdx from "remark-mdx";
-import { remarkInclude } from "fumadocs-mdx/config";
-import { InferPageType } from "fumadocs-core/source";
+import { remark } from 'remark';
+import remarkGfm from 'remark-gfm';
+import remarkMdx from 'remark-mdx';
+import { remarkAutoTypeTable } from 'fumadocs-typescript';
+import { remarkInclude } from 'fumadocs-mdx/config';
+import { type Page } from '@/lib/source';
+import { remarkNpm } from 'fumadocs-core/mdx-plugins';
 
 const processor = remark()
   .use(remarkMdx)
   .use(remarkInclude)
-  .use(remarkGfm);
-export async function getLLMText(page: InferPageType<typeof source>) {
+  .use(remarkGfm)
+  .use(remarkAutoTypeTable)
+  .use(remarkNpm);
+  
+export async function getLLMText(page: Page) {
+  const category =
+    {
+      core: "The docs Waterbus",
+      flutter_sdk: "Integrate into Flutter",
+      server_sdk: "Integrate into your backend",
+      openapi: "OpenAPI spec for Waterbus",
+    }[page.slugs[0]] ?? page.slugs[0];
+
   const processed = await processor.process({
-    path: page.data._meta.filePath,
+    path: page.data._file.absolutePath,
     value: page.data.content,
   });
-  return `# ${page.data.title}
-      URL: ${page.url}
-      ${page.data.description}
-      ${processed.value}`;
+
+  const sourcePath = page.data._file.path;
+
+  return `# ${category}: ${page.data.title}
+URL: ${page.url}
+Source: https://raw.githubusercontent.com/waterbustech/waterdocs/refs/heads/main/content/${sourcePath}
+
+${page.data.description}
+        
+${processed.value}`;
 }

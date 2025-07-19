@@ -7,10 +7,10 @@ import {
 } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
 import { RateWrapper } from "@/components/rate_wrapper";
-import { MDXContent } from '@content-collections/mdx/react';
-import { getMDXComponents } from '@/mdx-components';
 import { getGithubLastEdit } from "fumadocs-core/server";
 import { LLMCopyButton, ViewOptions } from "./page.client";
+import { getMDXComponents } from '@/mdx-components';
+import { createRelativeLink } from 'fumadocs-ui/mdx';
 
 export default async function Page(props: {
   params: Promise<{ lang: string; slug?: string[] }>;
@@ -18,6 +18,8 @@ export default async function Page(props: {
   const params = await props.params;
   const page = source.getPage(params.slug, params.lang);
   if (!page) notFound();
+
+  const { body: MDXContent, toc, lastModified } = await page.data.load();
 
   const optionDivStyle: React.CSSProperties = {
     display: 'flex',
@@ -47,7 +49,7 @@ export default async function Page(props: {
       tableOfContent={{
         style: "clerk",
       }}
-      toc={page.data.toc}
+      toc={toc}
       full={page.data.full}
     >
       <DocsBody>
@@ -92,7 +94,12 @@ export default async function Page(props: {
               githubUrl={`https://github.com/waterbustech/waterdocs/tree/main/content/${page.file.path}`}
             />
           </div>
-          <MDXContent code={page.data.body} components={getMDXComponents()} />
+          <MDXContent
+            components={getMDXComponents({
+              // this allows you to link to other pages with relative file paths
+              a: createRelativeLink(source, page),
+            })}
+          />
           <RateWrapper />
       </div>
       </DocsBody>

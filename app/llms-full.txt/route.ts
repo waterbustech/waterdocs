@@ -1,15 +1,13 @@
-import { source } from "@/lib/source";
-import { getLLMText } from "@/lib/get-llm-text";
+import { source } from '@/lib/source';
+import { getLLMText } from '@/lib/get-llm-text';
 
+// cached forever
 export const revalidate = false;
 
 export async function GET() {
-  console.log("AI request scan");
-  const scan = source
-    .getPages()
-    .filter((file) => file.slugs[0] !== "openapi")
-    .map(getLLMText);
+  console.log("request get page");
+  const scan = source.getPages().map(getLLMText);
   const scanned = await Promise.all(scan);
 
-  return new Response(scanned.join("\n\n"));
+  return new Response(scanned.join('\n\n'));
 }

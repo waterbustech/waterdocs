@@ -15,8 +15,8 @@ import {
 import { useDocsSearch } from 'fumadocs-core/search/client';
 import { useI18n } from 'fumadocs-ui/contexts/i18n';
 
-const appId = process.env.ALGOLIA_APP_ID || "";
-const apiKey = process.env.ALGOLIA_SEARCH_API_KEY || "";
+const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "";
+const apiKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY || "";
 const client = liteClient(appId, apiKey);
 
 export default function CustomSearchDialog(props: SharedProps) {

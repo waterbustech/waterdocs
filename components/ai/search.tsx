@@ -362,12 +362,12 @@ function Content() {
             <DialogTitle className="text-xs flex-1">
               Powered by{' '}
               <a
-                href="https://inkeep.com"
+                href="https://www.anthropic.com/"
                 target="_blank"
                 className="font-medium text-fd-popover-foreground"
                 rel="noreferrer noopener"
               >
-                Inkeep AI
+                Anthropic AI
               </a>
               . AI can be inaccurate, please verify the information.
             </DialogTitle>

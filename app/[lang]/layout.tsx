@@ -61,6 +61,7 @@ export default async function Layout({
                 previousPage: "Trang trước",
                 nextPage: "Trang sau",
                 chooseLanguage: "Chọn ngôn ngữ",
+                
               },
             }
             [lang],

@@ -7,7 +7,6 @@ import { InferPageType } from "fumadocs-core/source";
 
 const processor = remark()
   .use(remarkMdx)
-  // needed for Fumadocs MDX
   .use(remarkInclude)
   .use(remarkGfm);
 export async function getLLMText(page: InferPageType<typeof source>) {

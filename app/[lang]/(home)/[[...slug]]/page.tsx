@@ -11,9 +11,6 @@ import { MDXContent } from '@content-collections/mdx/react';
 import { getMDXComponents } from '@/mdx-components';
 import { getGithubLastEdit } from "fumadocs-core/server";
 import { LLMCopyButton, ViewOptions } from "./page.client";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@radix-ui/react-hover-card";
-import Link from 'fumadocs-core/link';
-import * as path from 'node:path';
 
 export default async function Page(props: {
   params: Promise<{ lang: string; slug?: string[] }>;
@@ -21,20 +18,18 @@ export default async function Page(props: {
   const params = await props.params;
   const page = source.getPage(params.slug, params.lang);
   if (!page) notFound();
-  // const MDXContent = page.data.body;
-  const optionDivStyle = {
-    // display: "inline-flex",
+
+  const optionDivStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
-    gap: '0.5rem',
+    gap: '0.25rem',
     alignItems: 'center',
-    borderBottom: '1px solid rgb(7, 60, 129)', // a common Tailwind border color
-    paddingTop: '0.5rem',
-    paddingBottom: '1.5rem',
+    borderBottom: '1px solid rgba(200, 200, 200, 0.15)',
+    paddingTop: '0.25rem',
+    paddingBottom: '0.75rem',
+    fontSize: '0.85rem',
+    color: '#ccc', 
   };
-
-
-  // const { body: Mdx } = await page.data.load();;
 
   const time = await getGithubLastEdit({
     owner: 'waterbustech',
@@ -45,9 +40,9 @@ export default async function Page(props: {
   
   return (
     <DocsPage
-      // editOnGithub={
-      //   {owner: "waterbustech", repo: "waterdocs", path: "main"}
-      // }
+      editOnGithub={
+        {owner: "waterbustech", repo: "waterdocs", path: `content/${page.file.path}`, sha: "main",}
+      }
       lastUpdate={new Date(time)}
       tableOfContent={{
         style: "clerk",
@@ -91,46 +86,12 @@ export default async function Page(props: {
         <DocsTitle>{page.data.title}</DocsTitle>
         <DocsDescription>{page.data.description}</DocsDescription>
           <div style={optionDivStyle}>
-            <LLMCopyButton slug={params.slug} />
+            <LLMCopyButton slug={params.slug ?? []} />
             <ViewOptions
               markdownUrl={`${page.url}.mdx`}
               githubUrl={`https://github.com/waterbustech/waterdocs/tree/main/content/${page.file.path}`}
             />
           </div>
-           {/* <div className="prose flex-1 text-fd-foreground/80">
-          <Mdx
-            components={getMDXComponents({
-              a: ({ href, ...props }) => {
-                const found = source.getPageByHref(href ?? '', {
-                  dir: path.dirname(page.path),
-                });
-
-                if (!found) return <Link href={href} {...props} />;
-
-                return (
-                  <HoverCard>
-                    <HoverCardTrigger asChild>
-                      <Link
-                        href={
-                          found.hash
-                            ? `${found.page.url}#${found.hash}`
-                            : found.page.url
-                        }
-                        {...props}
-                      />
-                    </HoverCardTrigger>
-                    <HoverCardContent className="text-sm">
-                      <p className="font-medium">{found.page.data.title}</p>
-                      <p className="text-fd-muted-foreground">
-                        {found.page.data.description}
-                      </p>
-                    </HoverCardContent>
-                  </HoverCard>
-                );
-              },
-            })}
-          />
-        </div> */}
           <MDXContent code={page.data.body} components={getMDXComponents()} />
           <RateWrapper />
       </div>
@@ -141,7 +102,7 @@ export default async function Page(props: {
 }
 
 export async function generateStaticParams() {
-  return source.generateParams();
+  return source.generateParams('slug', 'locale');
 }
 
 export async function generateMetadata(props: {

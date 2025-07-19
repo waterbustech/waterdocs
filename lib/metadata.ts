@@ -23,7 +23,7 @@ export function createMetadata(override: Metadata): Metadata {
       types: {
         "application/rss+xml": [
           {
-            title: "WaterBus Docs",
+            title: "Waterdocs",
             url: "https://docs.waterbus.tech/rss.xml",
           },
         ],

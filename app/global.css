@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import 'tailwindcss' source(none);
 @import 'fumadocs-ui/css/catppuccin.css';
 @import 'fumadocs-ui/css/preset.css';
 @import 'fumadocs-openapi/css/preset.css';
@@ -54,27 +54,32 @@
   );
 }
 
-.flutter-sdk {
-  --color-fd-primary: var(--flutter-sdk-color);
+.flutter-sdk a {
+  color: var(--flutter-sdk-color);
 }
 
-.core {
-  --color-fd-primary: var(--core-color);
+.core a {
+  color: var(--core-color);
+}
+
+.server-sdk a {
+  color: var(--server-sdk-color);
+}
+
+.openapi a {
+  color: var(--openapi-color);
 }
 
 :root {
-  --core-color: hsl(250, 80%, 54%);
-  --flutter-sdk-color: hsl(220, 91%, 54%);
+  --core-color: hsl(250 100% 80%);
+  --flutter-sdk-color: hsl(217 92% 76%);
+  --server-sdk-color: #a6e3a1;
+  --openapi-color: #94e2d5;
 }
 
 body {
   overscroll-behavior-y: none;
   background-color: var(--color-fd-background);
-}
-
-.dark {
-  --core-color: hsl(250 100% 80%);
-  --flutter-sdk-color: hsl(217 92% 76%);
 }
 
 @keyframes circuit_1 {
@@ -101,4 +106,9 @@ body {
     opacity: 0;
     transform: translateX(212px);
   }
+}
+
+::selection {
+  background: transparent;
+  color: #cba6f7;
 }

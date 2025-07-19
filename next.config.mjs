@@ -6,20 +6,20 @@ const config = {
   images: {
     domains: ["media.waterbus.tech", "github.com"],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/en/:path*.mdx',
+        destination: '/llms.mdx/:path*',
+      },
+    ];
+  },
   async redirects() {
     return [
       {
         source: "/",
         destination: "/en/core",
         permanent: true,
-      },
-    ];
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/:path*.mdx',
-        destination: '/llms.mdx/:path*',
       },
     ];
   },

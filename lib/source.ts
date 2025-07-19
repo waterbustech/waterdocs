@@ -1,7 +1,7 @@
 import { InferMetaType, InferPageType, loader } from "fumadocs-core/source";
 import { icons } from "lucide-react";
 import { createElement } from "react";
-import { createOpenAPI, attachFile } from "fumadocs-openapi/server";
+import { attachFile, createOpenAPI } from 'fumadocs-openapi/server';
 import { allDocs, allMetas } from "content-collections";
 import { createMDXSource } from "@fumadocs/content-collections";
 import { i18n } from "@/lib/i18n";

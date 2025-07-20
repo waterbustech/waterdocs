@@ -212,8 +212,8 @@ let processor: Processor | undefined;
 const map = new Map<string, ReactNode>();
 
 const roleName: Record<string, string> = {
-  user: 'you',
-  assistant: 'fumadocs',
+  user: 'You',
+  assistant: 'Waterdocs',
 };
 
 function Message({ message }: { message: Message }) {
@@ -335,6 +335,7 @@ function Content() {
     streamProtocol: 'data',
     sendExtraMessageFields: true,
     onResponse(response) {
+      console.log(response.status);
       if (response.status === 401) {
         console.error(response.statusText);
       }

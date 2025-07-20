@@ -5,7 +5,7 @@ import { getLLMText } from '@/lib/get-llm-text';
 export const revalidate = false;
 
 export async function GET() {
-  console.log("request get page");
+  console.log("==> request llms-full");
   const scan = source.getPages().map(getLLMText);
   const scanned = await Promise.all(scan);
 

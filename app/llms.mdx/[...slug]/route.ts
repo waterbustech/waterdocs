@@ -9,6 +9,7 @@ export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ slug?: string[] }> },
 ) {
+  console.log("==> request llms.mdx");
   const { slug } = await params;
   const page = source.getPage(slug);
   if (!page) notFound();

@@ -3,6 +3,7 @@ import { source } from "@/lib/source";
 export const revalidate = false;
 
 export async function GET() {
+  console.log("==> request llms.txt");
   const scanned: string[] = [];
   scanned.push("# Docs");
   const map = new Map<string, string[]>();

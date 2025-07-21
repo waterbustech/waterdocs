@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import { type DocumentRecord } from 'fumadocs-core/search/algolia';
 import { source } from '@/lib/source';
 
-export const revalidate = false;
+// export const revalidate = false;
 
 export async function GET() {
   const results: DocumentRecord[] = [];
 
   for (const page of source.getPages()) {
-    const { structuredData } = await page.data.load();
+    const { structuredData } = await page.data;
 
     results.push({
       _id: page.url,

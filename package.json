@@ -3,7 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "next build && node ./scripts/update-index.mjs",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "search-index": "node ./scripts/update-index.mjs",
+    "openapi-gen": "node ./scripts/generate-docs.mjs",
+    "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
     "postinstall": "fumadocs-mdx"
@@ -11,7 +17,8 @@
   "dependencies": {
     "@ai-sdk/openai": "^1.3.22",
     "@ai-sdk/react": "^1.2.12",
-    "@fumadocs/mdx-remote": "^1.3.4",
+    "@fumadocs/mdx-remote": "^1.4.0",
+    "@opennextjs/cloudflare": "^1.5.1",
     "@radix-ui/react-collapsible": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-hover-card": "^1.1.14",
@@ -21,11 +28,11 @@
     "ai": "^4.3.15",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "fumadocs-core": "^15.6.4",
-    "fumadocs-mdx": "^11.6.11",
-    "fumadocs-openapi": "^9.1.3",
+    "fumadocs-core": "^15.6.5",
+    "fumadocs-mdx": "^11.7.0",
+    "fumadocs-openapi": "^9.1.4",
     "fumadocs-typescript": "^4.0.6",
-    "fumadocs-ui": "^15.6.4",
+    "fumadocs-ui": "^15.6.5",
     "hast-util-to-jsx-runtime": "^2.3.6",
     "lucide-react": "^0.525.0",
     "next": "15.3.1",
@@ -36,7 +43,7 @@
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "remark-rehype": "^11.1.2",
-    "shiki": "^3.8.0",
+    "shiki": "^3.8.1",
     "tailwind-merge": "^3.3.0",
     "zod": "^4.0.5"
   },
@@ -54,12 +61,14 @@
     "dotenv": "^17.2.0",
     "gray-matter": "^4.0.3",
     "next-validate-link": "^1.5.2",
+    "openapi-types": "^12.1.3",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11",
     "tailwindcss-animate": "^1.0.7",
     "tinyglobby": "^0.2.14",
     "ts-morph": "^26.0.0",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "wrangler": "^4.25.0"
   }
 }

@@ -1,8 +1,8 @@
 import { InferMetaType, InferPageType, loader } from "fumadocs-core/source";
 import { icons } from "lucide-react";
 import { createElement } from "react";
-import { attachFile, createOpenAPI } from 'fumadocs-openapi/server';
-import { docs } from '@/.source';
+import { attachFile, createOpenAPI } from "fumadocs-openapi/server";
+import { docs } from "@/.source";
 import { i18n } from "@/lib/i18n";
 
 // See https://fumadocs.vercel.app/docs/headless/source-api for more info

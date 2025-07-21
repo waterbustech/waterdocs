@@ -17,6 +17,12 @@ const config = {
     // Replaced by root workspace command
     ignoreDuringBuilds: true,
   },
+  serverExternalPackages: [
+    'ts-morph',
+    'typescript',
+    'oxc-transform',
+    'shiki',
+  ],
   images: {
     domains: ["media.waterbus.tech", "github.com"],
   },
@@ -42,6 +48,9 @@ const config = {
     ];
   },
 };
+
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+initOpenNextCloudflareForDev();
 
 const withMDX = createMDX();
 

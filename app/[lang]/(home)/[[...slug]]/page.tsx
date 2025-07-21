@@ -19,7 +19,7 @@ export default async function Page(props: {
   const page = source.getPage(params.slug, params.lang);
   if (!page) notFound();
 
-  const { body: MDXContent, toc, lastModified } = await page.data.load();
+  const { body: MDXContent, toc, lastModified } = await page.data;
 
   const optionDivStyle: React.CSSProperties = {
     display: 'flex',
@@ -33,19 +33,12 @@ export default async function Page(props: {
     color: '#ccc', 
   };
 
-  const time = await getGithubLastEdit({
-    owner: 'waterbustech',
-    repo: 'waterdocs',
-    path: `content/${page.file.path}`,
-    token: `Bearer ${process.env.GIT_TOKEN}`
-  }) || Date.now();
-  
   return (
     <DocsPage
       editOnGithub={
         {owner: "waterbustech", repo: "waterdocs", path: `content/${page.file.path}`, sha: "main",}
       }
-      lastUpdate={new Date(time)}
+      lastUpdate={new Date(lastModified || Date.now())}
       tableOfContent={{
         style: "clerk",
       }}

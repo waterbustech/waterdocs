@@ -12,7 +12,7 @@ import { z } from "zod";
 export const docs = defineDocs({
   dir: "content",
   docs: {
-    async: true,
+    async: false,
     schema: frontmatterSchema.extend({
       preview: z.string().optional(),
       index: z.boolean().default(false),
@@ -35,8 +35,8 @@ export default defineConfig({
     // rehypeCodeOptions: {
     //   lazy: true,
     //   experimentalJSEngine: true,
-    //   langs: ["ts", "js", "html", "tsx", "mdx"],
-    //   inline: "tailing-curly-colon",
+    //   // langs: ["rust", "dart", "java", "kotlin", "swift", "objective-c"],
+    //   // inline: "tailing-curly-colon",
     //   themes: {
     //     light: "catppuccin-latte",
     //     dark: "catppuccin-mocha",

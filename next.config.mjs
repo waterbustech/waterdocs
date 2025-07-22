@@ -17,14 +17,20 @@ const config = {
     // Replaced by root workspace command
     ignoreDuringBuilds: true,
   },
-  serverExternalPackages: [
-    'ts-morph',
-    'typescript',
-    'oxc-transform',
-    'shiki',
-  ],
+  serverExternalPackages: ["ts-morph", "typescript", "oxc-transform", "shiki"],
   images: {
-    domains: ["media.waterbus.tech", "github.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "media.waterbus.tech",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "github.com",
+        port: "",
+      },
+    ],
   },
   async rewrites() {
     return [

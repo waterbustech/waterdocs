@@ -41,10 +41,18 @@ function set(url: string, feedback: Feedback | null) {
   else localStorage.removeItem(key);
 }
 
+export interface ActionResponse {
+  githubUrl: string;
+}
+
+interface Result extends Feedback {
+  response?: ActionResponse;
+}
+
 export function Rate({
   onRateAction,
 }: {
-  onRateAction: (url: string, feedback: Feedback) => Promise<void>;
+  onRateAction: (url: string, feedback: Feedback) => Promise<ActionResponse>;
 }) {
   const url = usePathname();
   const [previous, setPrevious] = useState<Feedback | null>(null);

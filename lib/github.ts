@@ -1,9 +1,9 @@
-import { App, Octokit } from "octokit";
-import type { Feedback } from "@/components/rate";
+import { App, Octokit } from 'octokit';
+import type { ActionResponse, Feedback } from '@/components/rate';
 
 export const repo = "waterdocs";
 export const owner = "waterbustech";
-export const DocsCategory = "Docs Feedback";
+export const DocsCategory = 'Docs Feedback';
 
 let instance: Octokit | undefined;
 
@@ -14,7 +14,7 @@ async function getOctokit(): Promise<Octokit> {
 
   if (!appId || !privateKey) {
     throw new Error(
-      "No GitHub keys provided for Github app, docs feedback feature will not work."
+      'No GitHub keys provided for Github app, docs feedback feature will not work.',
     );
   }
 
@@ -33,7 +33,6 @@ async function getOctokit(): Promise<Octokit> {
       },
     }
   );
-
   instance = await app.getInstallationOctokit(data.id);
   return instance;
 }
@@ -69,4 +68,69 @@ async function getFeedbackDestination() {
 `);
 
   return (cachedDestination = repository);
+}
+
+export async function onRateAction(
+  url: string,
+  feedback: Feedback,
+): Promise<ActionResponse> {
+  'use server';
+  const octokit = await getOctokit();
+  const destination = await getFeedbackDestination();
+  if (!octokit || !destination)
+    throw new Error('GitHub comment integration is not configured.');
+
+  const category = destination.discussionCategories.nodes.find(
+    (category) => category.name === DocsCategory,
+  );
+
+  if (!category){
+  throw new Error(
+      `Please create a "${DocsCategory}" category in GitHub Discussion`,
+    );
+  }
+    
+  const title = `Feedback for ${url}`;
+  const body = `[${feedback.opinion}] ${feedback.message}\n\n> Forwarded from user feedback.`;
+
+  let {
+    search: {
+      nodes: [discussion],
+    },
+  }: {
+    search: {
+      nodes: { id: string; url: string }[];
+    };
+  } = await octokit.graphql(`
+          query {
+            search(type: DISCUSSION, query: ${JSON.stringify(`${title} in:title repo:${owner}/${repo} author:@me`)}, first: 1) {
+              nodes {
+                ... on Discussion { id, url }
+              }
+            }
+          }`);
+
+  if (discussion) {
+    await octokit.graphql(`
+            mutation {
+              addDiscussionComment(input: { body: ${JSON.stringify(body)}, discussionId: "${discussion.id}" }) {
+                comment { id }
+              }
+            }`);
+  } else {
+    const result: {
+      discussion: { id: string; url: string };
+    } = await octokit.graphql(`
+            mutation {
+              createDiscussion(input: { repositoryId: "${destination.id}", categoryId: "${category!.id}", body: ${JSON.stringify(body)}, title: ${JSON.stringify(title)} }) {
+                discussion { id, url }
+              }
+            }`);
+
+    discussion = result.discussion;
+  }
+
+  return {
+    githubUrl: discussion.url,
+  };
 }

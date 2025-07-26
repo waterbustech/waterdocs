@@ -6,11 +6,12 @@ import {
   DocsTitle,
 } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
-import { RateWrapper } from "@/components/rate_wrapper";
 import { getGithubLastEdit } from "fumadocs-core/server";
 import { LLMCopyButton, ViewOptions } from "./page.client";
 import { getMDXComponents } from '@/mdx-components';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
+import { onRateAction } from "@/lib/github";
+import { Rate } from "@/components/rate";
 
 export default async function Page(props: {
   params: Promise<{ lang: string; slug?: string[] }>;
@@ -93,7 +94,7 @@ export default async function Page(props: {
               a: createRelativeLink(source, page),
             })}
           />
-          <RateWrapper />
+           <Rate onRateAction={onRateAction} />
       </div>
       </DocsBody>
       

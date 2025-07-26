@@ -18,9 +18,9 @@ export async function POST(req: Request) {
   // Inject context into the first system message
   const systemMessage = {
     role: "system",
-    content: `You are a helpful assistant for the Waterbus documentation.
-Use the following documentation to answer questions:
-${docsContext}`,
+    content: `You are a helpful assistant for the Waterbus documentation. 
+    Use the following documentation to answer questions:
+    ${docsContext}. If you receive the question which is not related to the Waterbus, it is out of scope - so give a short and out-of-scope answer (2 sentences)`,
   };
 
   const result = streamText({
